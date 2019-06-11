@@ -4,7 +4,7 @@ package CacheProject;
  * @author ${Krishna Teja Ayinala, Sindhura Bonthu}
  *
  */
-public class WriteInstruction {
+public class WriteInstruction extends InstructionTransferer {
 
 	private char writeData;
 

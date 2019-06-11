@@ -4,33 +4,35 @@ package CacheProject;
  * @author ${Krishna Teja Ayinala, Sindhura Bonthu}
  *
  */
-public class ReadInstruction {
-	private int insAddr;
-	private int byteEna;
-	private char[] data;
+public class ReadInstruction extends InstructionTransferer {
 
-	public int getInsAddr() {
-		return insAddr;
+	private int byteEnables;
+
+	public int getByteEnables() {
+		return byteEnables;
 	}
 
-	public void setInsAddr(int insAddr) {
-		this.insAddr = insAddr;
+	public void setByteEnables(int byteEnables) {
+		this.byteEnables = byteEnables;
 	}
 
-	public int getBytena() {
-		return byteEna;
-	}
+	// private int insAddr;
+	// private char[] data;
 
-	public void setByteena(int byteEna) {
-		this.byteEna = byteEna;
-	}
+	// public int getInsAddr() {
+	// return insAddr;
+	// }
+	//
+	// public void setInsAddr(int insAddr) {
+	// this.insAddr = insAddr;
+	// }
 
-	public char[] getDataBytes() {
-		return data;
-	}
-
-	public void setDataBytes(char[] data) {
-		this.data = data;
-	}
+	// public char[] getDataBytes() {
+	// return data;
+	// }
+	//
+	// public void setDataBytes(char[] data) {
+	// this.data = data;
+	// }
 
 }
