@@ -4,12 +4,9 @@ package CacheProject;
  * @author ${Krishna Teja Ayinala, Sindhura Bonthu}
  *
  */
-import java.util.LinkedList;
-import java.util.Queue;
-
 public class Memory {
-	public Queue<String> queueMemorytoL2C = new LinkedList<String>();
-	public Queue<String> queueL2CtoMemory = new LinkedList<String>();
+	public Queue queueMemorytoL2C = new Queue();
+	public Queue queueL2CtoMemory = new Queue();
 
 	Memory() {
 		System.out.println("Memory Created");

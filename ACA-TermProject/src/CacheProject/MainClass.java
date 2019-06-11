@@ -6,8 +6,7 @@ package CacheProject;
  */
 import java.io.IOException;
 
-public class MainClass extends CommonImpl  {
-	
+public class MainClass extends CommonImpl {
 
 	public static void main(String[] args) throws IOException {
 		// Initoiate components
@@ -18,10 +17,9 @@ public class MainClass extends CommonImpl  {
 		Memory memory = new Memory();
 
 		System.out.println("Major Components Created");
-		
-		Address k = formatAddress(4096,6,6,5);
-//		System.out.println(k);
-		
+
+		Address k = formatAddress(4096, 6, 6, 5);
+		// System.out.println(k);
 
 	}
 }

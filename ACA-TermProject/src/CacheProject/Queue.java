@@ -8,7 +8,7 @@ package CacheProject;
 // Implementation from
 // https://www.techiedelight.com/queue-implementation-in-java/
 
-class QueueOperations {
+class Queue {
 	private int front; // front points to front element in the queue
 	private int rear; // rear points to last element in the queue
 	private int capacity; // maximum capacity of the queue
@@ -16,7 +16,7 @@ class QueueOperations {
 	private Object arr[]; // array to store queue elements
 	// Constructor to initialize queue
 
-	QueueOperations() {
+	Queue() {
 		arr = new Object[64];
 		capacity = 64;
 		front = -1;
