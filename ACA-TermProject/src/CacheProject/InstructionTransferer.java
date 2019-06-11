@@ -12,7 +12,7 @@ public class InstructionTransferer {
 	int instructioNum;
 	int instructionKind;
 	Address address;
-	String bAddress;
+//	String bAddress;
 
 	public String getCommand() {
 		return command;
@@ -46,12 +46,12 @@ public class InstructionTransferer {
 		this.address = address;
 	}
 
-	public String getbAddress() {
-		return bAddress;
-	}
-
-	public void setbAddress(String bAddress) {
-		this.bAddress = bAddress;
-	}
+	// public String getbAddress() {
+	// return bAddress;
+	// }
+	//
+	// public void setbAddress(String bAddress) {
+	// this.bAddress = bAddress;
+	// }
 
 }
