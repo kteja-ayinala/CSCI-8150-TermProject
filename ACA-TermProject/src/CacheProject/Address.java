@@ -12,7 +12,7 @@ public class Address {
 	private String index;
 	private String offset;
 	private int address;
-	private char[] binaryAddress;
+	private String binaryAddress;
 
 	public String getTag() {
 		return tag;
@@ -46,11 +46,11 @@ public class Address {
 		this.address = address;
 	}
 
-	public char[] getBinaryAddress() {
+	public String getBinaryAddress() {
 		return binaryAddress;
 	}
 
-	public void setBinaryAddress(char[] binaryAddress) {
+	public void setBinaryAddress(String binaryAddress) {
 		this.binaryAddress = binaryAddress;
 	}
 
