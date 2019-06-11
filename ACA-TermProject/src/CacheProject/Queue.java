@@ -14,24 +14,25 @@ class Queue {
 	private int capacity; // maximum capacity of the queue
 	private int count; // current size of the queue
 	private Object arr[]; // array to store queue elements
-	// Constructor to initialize queue
 
 	Queue() {
 		arr = new Object[64];
 		capacity = 64;
-		front = -1;
+		front = 0;
 		rear = -1;
 		count = 0;
 	}
 
+	Object dequedObj = null;
+
 	public Object dequeue() {
-		Object dequedObj = null;
+
 		// check for queue underflow
 		if (isEmpty()) {
 			System.out.println("UnderFlow");
 		}
 		dequedObj = arr[front];
-		System.out.println("Removing " + arr[front]);
+		// System.out.println("Removing " + arr[front]);
 		front = (front + 1);
 		count--;
 		return dequedObj;
@@ -40,10 +41,10 @@ class Queue {
 	public void enqueue(Object item) {
 		// check for queue overflow
 		if (isFull()) {
-			System.out.println("OverFlow\nProgram Terminated");
+			// System.out.println("OverFlow\nProgram Terminated");
 		}
 
-		System.out.println("Inserting " + item);
+		// System.out.println("Inserting " + item);
 
 		rear = (rear + 1);
 		arr[rear] = item;
