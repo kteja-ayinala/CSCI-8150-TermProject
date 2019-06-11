@@ -6,8 +6,14 @@ package CacheProject;
  */
 public class WriteInstruction {
 
-	public WriteInstruction() {
-		// TODO Auto-generated constructor stub
+	private char writeData;
+
+	public char getWriteData() {
+		return writeData;
+	}
+
+	public void setWriteData(char writeData) {
+		this.writeData = writeData;
 	}
 
 }
