@@ -25,5 +25,7 @@ public class L2Controller {
 		l2_blocks = 512;
 		l2_BlockSize = 32;
 		l2_CpuBits = 17;
+		
+		
 	}
 }
