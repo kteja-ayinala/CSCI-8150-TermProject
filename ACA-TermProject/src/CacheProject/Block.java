@@ -40,6 +40,31 @@ public class Block {
 		rIns = mdata;
 	}
 
+	public Block(char mdata[], int index, int cycle) throws InterruptedException {
+		validBit = 1;
+		tag = 0;
+		offset = 0;
+		data = new char[32];
+		int counter = 0;
+		boolean flag = false;
+		for (int i = 0; i < 8; i++) {
+			int location = index*32 + counter;
+			for (int j = 0; j < 4; j++) {
+				data[counter] = mdata[counter];
+				counter++;
+			}
+			if (flag) {
+				System.out.println("Cycle: " + cycle);
+				cycle++;
+			} else {
+				flag = true;
+				cycle++;
+			}
+			System.out.println("Reading data from memory " + location);
+			Thread.sleep(100);
+		}
+	}
+
 	public int getValidBit() {
 		return validBit;
 	}

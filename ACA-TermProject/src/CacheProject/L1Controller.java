@@ -16,9 +16,11 @@ public class L1Controller extends CommonImpl {
 	Block way2[];
 	Block way3[];
 	Block way4[];
+	public Queue queueProcessortoL1C = new Queue();
 	public Queue queueL1CtoL1D = new Queue();
 	public Queue queueL1CtoL2C = new Queue();
 	public Queue queueL1CtoProcessor = new Queue();
+	L1Data l1Data;
 
 	L1Controller() {
 		l1_Tag = 6;
@@ -27,6 +29,8 @@ public class L1Controller extends CommonImpl {
 		l1_SetCount = 64;
 		l1_BlockSize = 32;
 		l1_CpuBits = 17;
+
+		l1Data = new L1Data();
 
 		// L1 Instruction Cache
 		way1 = new Block[64];
@@ -114,6 +118,62 @@ public class L1Controller extends CommonImpl {
 		}
 		way1[0] = new Block(values);
 		System.out.println("Instructions added to L1 Instruction Cache");
+	}
+
+	public boolean isL1Hit(Address address) {
+		int index = Integer.parseInt(address.getIndex(), 2);
+		int tag = Integer.parseInt(address.getTag(), 2);
+		boolean isInway1 = ((l1Data.way1[index].getTag() == tag) && l1Data.way1[tag].getValidBit() == 1);
+		boolean isInway2 = ((l1Data.way2[index].getTag() == tag) && l1Data.way2[tag].getValidBit() == 1);
+		boolean isInway3 = ((l1Data.way3[index].getTag() == tag) && l1Data.way3[tag].getValidBit() == 1);
+		boolean isInway4 = ((l1Data.way4[index].getTag() == tag) && l1Data.way4[tag].getValidBit() == 1);
+		if (isInway1 || isInway2 || isInway3 || isInway4) {
+			return true;
+		}
+		return false;
+	}
+
+	public int isValid(int index, int tag) {
+		int valid = 1;
+		if (!(l1Data.way1[index].getValidBit() == 0) || !(l1Data.way2[index].validBit == 0)
+				|| !(l1Data.way3[index].validBit == 0) || !(l1Data.way4[index].validBit == 0)) {
+			return 0;
+		} else {
+			if (l1Data.way1[index].getTag() == tag) {
+				valid = l1Data.way1[index].getValidBit();
+			}
+			if (l1Data.way2[index].tag == tag) {
+				valid = l1Data.way2[index].getValidBit();
+			}
+			if (l1Data.way3[index].tag == tag) {
+				valid = l1Data.way3[index].getValidBit();
+			}
+			if (l1Data.way4[index].tag == tag) {
+				valid = l1Data.way4[index].getValidBit();
+			}
+			return valid;
+		}
+	}
+
+	public int isDirty(int index, int tag) {
+		int dirty = 0;
+		if (l1Data.way1[index].getTag() == tag) {
+			dirty = l1Data.way1[index].getDirtyBit();
+			return dirty;
+		}
+		if (l1Data.way2[index].getTag() == tag) {
+			dirty = l1Data.way2[index].getDirtyBit();
+			return dirty;
+		}
+		if (l1Data.way3[index].getTag() == tag) {
+			dirty = l1Data.way3[index].getDirtyBit();
+			return dirty;
+		}
+		if (l1Data.way4[index].getTag() == tag) {
+			dirty = l1Data.way4[index].getDirtyBit();
+			return dirty;
+		}
+		return dirty;
 	}
 
 }
