@@ -7,6 +7,16 @@ package CacheProject;
 public class ReadInstruction extends InstructionTransferer {
 
 	private int byteEnables;
+	private char[] data;
+	private char returnData;
+
+	public char getReturnData() {
+		return returnData;
+	}
+
+	public void setReturnData(char returnData) {
+		this.returnData = returnData;
+	}
 
 	public int getByteEnables() {
 		return byteEnables;
@@ -17,7 +27,6 @@ public class ReadInstruction extends InstructionTransferer {
 	}
 
 	// private int insAddr;
-	// private char[] data;
 
 	// public int getInsAddr() {
 	// return insAddr;
@@ -27,12 +36,12 @@ public class ReadInstruction extends InstructionTransferer {
 	// this.insAddr = insAddr;
 	// }
 
-	// public char[] getDataBytes() {
-	// return data;
-	// }
-	//
-	// public void setDataBytes(char[] data) {
-	// this.data = data;
-	// }
+	public char[] getDataBytes() {
+		return data;
+	}
+
+	public void setDataBytes(char[] data) {
+		this.data = data;
+	}
 
 }

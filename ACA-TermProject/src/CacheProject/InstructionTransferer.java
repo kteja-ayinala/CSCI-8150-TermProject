@@ -12,7 +12,8 @@ public class InstructionTransferer {
 	int instructioNum;
 	int instructionKind;
 	Address address;
-//	String bAddress;
+	// String bAddress;
+	Block transferBlock;
 
 	public String getCommand() {
 		return command;
@@ -54,4 +55,11 @@ public class InstructionTransferer {
 	// this.bAddress = bAddress;
 	// }
 
+	public Block getTransferBlock() {
+		return transferBlock;
+	}
+
+	public void setTransferBlock(Block transferBlock) {
+		this.transferBlock = transferBlock;
+	}
 }

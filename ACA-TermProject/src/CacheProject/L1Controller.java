@@ -20,6 +20,7 @@ public class L1Controller extends CommonImpl {
 	public Queue queueL1CtoL1D = new Queue();
 	public Queue queueL1CtoL2C = new Queue();
 	public Queue queueL1CtoProcessor = new Queue();
+	public Queue queueL2CtoL1C = new Queue();
 	L1Data l1Data;
 
 	L1Controller() {

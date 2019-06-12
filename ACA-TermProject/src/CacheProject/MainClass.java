@@ -5,6 +5,8 @@ package CacheProject;
  *
  */
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainClass extends CommonImpl {
 
@@ -35,7 +37,7 @@ public class MainClass extends CommonImpl {
 		int cycle = 0;
 		do {
 			cycle++;
-			System.out.println("cycle:" + cycle);
+			System.out.println("---------cycle:" + cycle + "---------");
 			if (!processor.queueProcessor.isEmpty()) {
 				instruction = (InstructionTransferer) processor.queueProcessor.dequeue();
 				l1Controller.queueProcessortoL1C.enqueue(instruction);
@@ -85,8 +87,91 @@ public class MainClass extends CommonImpl {
 				if (instruction.getInstructionKind() == 0) {// Read Instruction
 					memBlock = new Block(memory.memory[index].data, index, cycle);
 					cycle = cycle + 7;
+					memBlock.setBlockAddress(index);
+					memBlock.setValidBit(1);
+					memBlock.setDirtyBit(0);
+					ReadInstruction rIns = new ReadInstruction();
+					rIns.setCommand(instruction.getCommand());
+					rIns.setByteEnables(((ReadInstruction) instruction).getByteEnables());
+					rIns.setTransferBlock(memBlock);
+					rIns.setInstructionKind(instruction.getInstructionKind());
+					rIns.setInstructioNum(instruction.getInstructioNum());
+					rIns.setAddress(fAddress);
+					l2Controller.queueMemorytoL2C.enqueue(rIns);
+					System.out.println("Memory to L2C: " + instruction.getCommand());
 				} else {
 					// Write instruction
+				}
+			}
+
+			if (!l2Controller.queueMemorytoL2C.isEmpty()) {
+				instruction = (InstructionTransferer) l2Controller.queueMemorytoL2C.dequeue();
+				int address = instruction.getAddress().getAddress();
+				Address fAddress = formatAddress(address, l2Controller.l2_Tag, l2Controller.l2_Index,
+						l2Controller.l2_Offset);
+				if (instruction.getInstructionKind() == 0) {
+					WriteInstruction wIns = new WriteInstruction();
+					wIns.setAddress(fAddress);
+					wIns.setTransferBlock(instruction.getTransferBlock());
+					wIns.setCommand(instruction.getCommand());
+					wIns.setWriteData(instruction.command.split(" ")[2].charAt(0));
+					l2Controller.queueL2CtoL2D.enqueue(wIns);
+					System.out.println("L2C to L2D: " + instruction.getCommand());
+					l1Controller.queueL2CtoL1C.enqueue(wIns);
+					System.out.println("L2C to L1C: " + instruction.getCommand());
+
+				} else {
+					// write
+				}
+			}
+
+			if (!l1Controller.queueL2CtoL1C.isEmpty()) {
+				instruction = (InstructionTransferer) l1Controller.queueL2CtoL1C.dequeue();
+				int byteena = Integer.parseInt(instruction.getCommand().split(" ")[2]);
+				int address = instruction.getAddress().getAddress();
+				Address fAddress = formatAddress(address, l1Controller.l1_Tag, l1Controller.l1_Index,
+						l1Controller.l1_Offset);
+				if (instruction.getInstructionKind() == 0) {
+					WriteInstruction wIns = new WriteInstruction();
+					wIns.setTransferBlock(instruction.getTransferBlock());
+					wIns.setAddress(fAddress);
+					if (instruction.getInstructionKind() == 0) {
+						String ins = "Write" + fAddress.getAddress();
+						wIns.setCommand(ins);
+						l1Controller.queueL1CtoL1D.enqueue(wIns);
+						System.out.println("L1C to L1D: " + instruction.getCommand());
+						char returnData = instruction.getTransferBlock().getData()[Integer
+								.parseInt(fAddress.getOffset(), 2)];
+						ReadInstruction rIns = new ReadInstruction();
+						rIns.setByteEnables(byteena);
+						rIns.setReturnData(returnData);
+						rIns.setAddress(fAddress);
+						rIns.setCommand(instruction.getCommand());
+						int byteEnables = byteena;
+						if (byteEnables != 0) {
+							char[] data = new char[byteEnables];
+							Block block = instruction.getTransferBlock();
+							for (int i = 0; i < byteEnables; i++) {
+								data[i] = block.getData()[Integer.parseInt(fAddress.getOffset(), 2) + i];
+							}
+							rIns.setDataBytes(data);
+						}
+						processor.queueL1CtoProcessor.enqueue(rIns);
+						System.out.println("L1C to Processor: " + instruction.getCommand());
+
+					}
+				} else {
+					// Write
+				}
+
+			}
+
+			if (!processor.queueL1CtoProcessor.isEmpty()) {
+				instruction = (InstructionTransferer) processor.queueL1CtoProcessor.dequeue();
+				if (instruction.getInstructionKind() == 0) {
+					char[] data = ((ReadInstruction) instruction).getDataBytes();
+					String finaldata = String.valueOf(data);
+					System.out.println("Result: " + finaldata);
 				}
 			}
 

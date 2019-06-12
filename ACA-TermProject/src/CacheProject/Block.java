@@ -10,7 +10,9 @@ public class Block {
 	int dirtyBit;
 	int tag;
 	int offset;
+	int blockAddress;
 	char data[];
+
 	ReadInstruction[] rIns;
 	WriteInstruction[] wIns;
 
@@ -48,7 +50,7 @@ public class Block {
 		int counter = 0;
 		boolean flag = false;
 		for (int i = 0; i < 8; i++) {
-			int location = index*32 + counter;
+			int location = index * 32 + counter;
 			for (int j = 0; j < 4; j++) {
 				data[counter] = mdata[counter];
 				counter++;
@@ -61,7 +63,6 @@ public class Block {
 				cycle++;
 			}
 			System.out.println("Reading data from memory " + location);
-			Thread.sleep(100);
 		}
 	}
 
@@ -120,4 +121,13 @@ public class Block {
 	public void setwIns(WriteInstruction[] wIns) {
 		this.wIns = wIns;
 	}
+
+	public int getBlockAddress() {
+		return blockAddress;
+	}
+
+	public void setBlockAddress(int blockAddress) {
+		this.blockAddress = blockAddress;
+	}
+
 }
