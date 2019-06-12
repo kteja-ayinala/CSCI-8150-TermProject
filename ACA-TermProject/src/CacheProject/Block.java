@@ -20,12 +20,13 @@ public class Block {
 		data = new char[32];
 	}
 
-	public Block(char data[]) {
+	public Block(char mdata[]) {
 		validBit = 1;
 		dirtyBit = 0;
 		tag = 0;
 		offset = 0;
 		data = new char[4];
+		data = mdata.clone();
 	}
 
 	public int getValidBit() {
