@@ -10,10 +10,19 @@ package CacheProject;
 public class InstructionTransferer {
 	String command;
 	int instructioNum;
-	int instructionKind;
+	int processorInstructionKind;
 	Address address;
 	// String bAddress;
 	Block transferBlock;
+	int instructionTransferType;
+
+	public int getInstructionTransferType() {
+		return instructionTransferType;
+	}
+
+	public void setInstructionTransferType(int instructionTransferType) {
+		this.instructionTransferType = instructionTransferType;
+	}
 
 	public String getCommand() {
 		return command;
@@ -31,12 +40,12 @@ public class InstructionTransferer {
 		this.instructioNum = instructioNum;
 	}
 
-	public int getInstructionKind() {
-		return instructionKind;
+	public int getProcessorInstructionKind() {
+		return processorInstructionKind;
 	}
 
-	public void setInstructionKind(int instructionKind) {
-		this.instructionKind = instructionKind;
+	public void setProcessorInstructionKind(int instructionKind) {
+		this.processorInstructionKind = instructionKind;
 	}
 
 	public Address getAddress() {

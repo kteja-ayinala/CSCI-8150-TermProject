@@ -29,7 +29,7 @@ public class Processor extends CommonImpl {
 				ReadInstruction ins = new ReadInstruction();
 				ins.setCommand(command);
 				ins.setInstructioNum(instructionNum);
-				ins.setInstructionKind(instructionKind);
+				ins.setProcessorInstructionKind(instructionKind);
 				ins.setAddress(fAddress);
 				ins.setByteEnables(Integer.parseInt(byteEnables));
 				queueProcessor.enqueue(ins);
@@ -39,7 +39,7 @@ public class Processor extends CommonImpl {
 				WriteInstruction ins = new WriteInstruction();
 				ins.setCommand(command);
 				ins.setInstructioNum(instructionNum);
-				ins.setInstructionKind(instructionKind);
+				ins.setProcessorInstructionKind(instructionKind);
 				ins.setAddress(fAddress);
 				ins.setWriteData(data);
 				queueProcessor.enqueue(ins);

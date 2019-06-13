@@ -56,13 +56,13 @@ public class Block {
 				data[counter] = mdata[counter]; // each cycle fetches 4 bytes
 				counter++;
 			}
-			 if (cycleIncflag) {
-			System.out.println("Cycle: " + cycle);
-			cycle++;
-			 } else {
-			 cycleIncflag = true;
-			 cycle++;
-			 }
+			if (cycleIncflag) {
+				System.out.println("Cycle: " + cycle);
+				cycle++;
+			} else {
+				cycleIncflag = true;
+				cycle++;
+			}
 			System.out.println("Reading data from memory " + location);
 		}
 	}
@@ -105,6 +105,11 @@ public class Block {
 
 	public void setData(char[] data) {
 		this.data = data;
+	}
+
+	public void setBitData(int offset, char data) {
+		this.data[offset] = data;
+		this.setDirtyBit(1);
 	}
 
 	public ReadInstruction[] getrIns() {

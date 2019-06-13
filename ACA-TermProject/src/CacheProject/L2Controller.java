@@ -111,7 +111,7 @@ public class L2Controller extends CommonImpl {
 		// l2_Index, l2_Offset);
 		int index = Integer.parseInt(address.getIndex(), 2);
 		int tag = Integer.parseInt(address.getTag(), 2);
-		boolean isInl2cache = ((l2Data.l2cache[index].getTag() == tag) && l2Data.l2cache[index].getValidBit() == 1 );
+		boolean isInl2cache = ((l2Data.l2cache[index].getTag() == tag) && l2Data.l2cache[index].getValidBit() == 1);
 		if (isInl2cache) {
 			return true;
 		}
@@ -141,4 +141,22 @@ public class L2Controller extends CommonImpl {
 		}
 		return dirty;
 	}
+
+	public void l2write(Block transferBlock, Address fAddress) {
+		if (l2Data.l2cache[Integer.parseInt(fAddress.getIndex(), 2)].getValidBit() == 0) {
+			l2Data.l2cache[Integer.parseInt(fAddress.getIndex(), 2)] = transferBlock;
+		}
+	}
+
+	public void l2writeChar(char singleCharData, Address fAddress) {
+		int tag = Integer.parseInt(fAddress.getTag());
+		int index = Integer.parseInt(fAddress.getIndex(), 2);
+		int offset = Integer.parseInt(fAddress.getOffset(), 2);
+		if (l2Data.l2cache[index].getTag() == tag) {
+			l2Data.l2cache[index].setBitData(offset, singleCharData);
+			l2Data.l2cache[index].setDirtyBit(1);
+		}
+
+	}
+
 }

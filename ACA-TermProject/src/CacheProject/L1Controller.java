@@ -40,56 +40,56 @@ public class L1Controller extends CommonImpl {
 		way4 = new Block[64];
 
 		ReadInstruction rdIns0 = new ReadInstruction();
-		rdIns0.setInstructionKind(0);
+		rdIns0.setProcessorInstructionKind(0);
 		rdIns0.setAddress(formatAddress(3, l1_Tag, l1_Index, l1_Offset));
 		rdIns0.setByteEnables(4);
 		rdIns0.setInstructioNum(1);
 		rdIns0.setCommand("Read 3 4");
 
 		ReadInstruction rdIns1 = new ReadInstruction();
-		rdIns1.setInstructionKind(0);
+		rdIns1.setProcessorInstructionKind(0);
 		rdIns1.setAddress(formatAddress(4, l1_Tag, l1_Index, l1_Offset));
 		rdIns1.setByteEnables(4);
 		rdIns1.setInstructioNum(1);
 		rdIns1.setCommand("Read 4 4");
 
 		ReadInstruction rdIns2 = new ReadInstruction();
-		rdIns2.setInstructionKind(0);
+		rdIns2.setProcessorInstructionKind(0);
 		rdIns2.setAddress(formatAddress(10, l1_Tag, l1_Index, l1_Offset));
 		rdIns2.setByteEnables(4);
 		rdIns2.setInstructioNum(1);
 		rdIns2.setCommand("Read 10 4");
 
 		ReadInstruction rdIns3 = new ReadInstruction();
-		rdIns3.setInstructionKind(0);
+		rdIns3.setProcessorInstructionKind(0);
 		rdIns3.setAddress(formatAddress(25, l1_Tag, l1_Index, l1_Offset));
 		rdIns3.setByteEnables(4);
 		rdIns3.setInstructioNum(1);
 		rdIns3.setCommand("Read 25 4");
 
 		ReadInstruction rdIns4 = new ReadInstruction();
-		rdIns4.setInstructionKind(0);
+		rdIns4.setProcessorInstructionKind(0);
 		rdIns4.setAddress(formatAddress(50, l1_Tag, l1_Index, l1_Offset));
 		rdIns4.setByteEnables(4);
 		rdIns4.setInstructioNum(1);
 		rdIns4.setCommand("Read 50 4");
 
 		ReadInstruction rdIns5 = new ReadInstruction();
-		rdIns5.setInstructionKind(0);
+		rdIns5.setProcessorInstructionKind(0);
 		rdIns5.setAddress(formatAddress(100, l1_Tag, l1_Index, l1_Offset));
 		rdIns5.setByteEnables(4);
 		rdIns5.setInstructioNum(1);
 		rdIns5.setCommand("Read 100 4");
 
 		ReadInstruction rdIns6 = new ReadInstruction();
-		rdIns6.setInstructionKind(0);
+		rdIns6.setProcessorInstructionKind(0);
 		rdIns6.setAddress(formatAddress(200, l1_Tag, l1_Index, l1_Offset));
 		rdIns6.setByteEnables(4);
 		rdIns6.setInstructioNum(1);
 		rdIns6.setCommand("Read 200 4");
 
 		ReadInstruction rdIns7 = new ReadInstruction();
-		rdIns7.setInstructionKind(0);
+		rdIns7.setProcessorInstructionKind(0);
 		rdIns7.setAddress(formatAddress(400, l1_Tag, l1_Index, l1_Offset));
 		rdIns7.setByteEnables(4);
 		rdIns7.setInstructioNum(1);
@@ -136,7 +136,7 @@ public class L1Controller extends CommonImpl {
 
 	public int isValid(int index, int tag) {
 		int valid = 1;
-		if ((l1Data.way1[index].getValidBit() == 0) || (l1Data.way2[index].getValidBit()== 0)
+		if ((l1Data.way1[index].getValidBit() == 0) || (l1Data.way2[index].getValidBit() == 0)
 				|| !(l1Data.way3[index].validBit == 0) || !(l1Data.way4[index].validBit == 0)) {
 			return 0;
 		} else {
@@ -175,6 +175,50 @@ public class L1Controller extends CommonImpl {
 			return dirty;
 		}
 		return dirty;
+	}
+
+	public void l1write(Block transferBlock, Address fAddress) {
+		if (l1Data.way1[Integer.parseInt(fAddress.getIndex(), 2)].getValidBit() == 0) {
+			l1Data.way1[Integer.parseInt(fAddress.getIndex(), 2)] = transferBlock;
+		}
+		if (l1Data.way2[Integer.parseInt(fAddress.getIndex(), 2)].getValidBit() == 0) {
+			l1Data.way2[Integer.parseInt(fAddress.getIndex(), 2)] = transferBlock;
+		}
+		if (l1Data.way3[Integer.parseInt(fAddress.getIndex(), 2)].getValidBit() == 0) {
+			l1Data.way3[Integer.parseInt(fAddress.getIndex(), 2)] = transferBlock;
+		}
+		if (l1Data.way4[Integer.parseInt(fAddress.getIndex(), 2)].getValidBit() == 0) {
+			l1Data.way4[Integer.parseInt(fAddress.getIndex(), 2)] = transferBlock;
+		}
+
+	}
+
+	public void l1writeChar(char singleCharData, Address fAddress) {
+
+		int tag = Integer.parseInt(fAddress.getTag());
+		int index = Integer.parseInt(fAddress.getIndex(), 2);
+		int offset = Integer.parseInt(fAddress.getOffset(), 2);
+		if (l1Data.way1[index].getTag() == tag) {
+			l1Data.way1[index].setBitData(offset, singleCharData);
+			l1Data.way1[index].setDirtyBit(1);
+		}
+		if (l1Data.way2[index].getTag() == tag) {
+			l1Data.way2[index].setBitData(offset, singleCharData);
+			l1Data.way2[index].setDirtyBit(1);
+		}
+		if (l1Data.way3[index].getTag() == tag) {
+			l1Data.way3[index].setBitData(offset, singleCharData);
+			l1Data.way3[index].setDirtyBit(1);
+		}
+		if (l1Data.way4[index].getTag() == tag) {
+			l1Data.way4[index].setBitData(offset, singleCharData);
+			l1Data.way4[index].setDirtyBit(1);
+		}
+	}
+
+	public Block readBlock(Address fAddress) {
+
+		return null;
 	}
 
 }

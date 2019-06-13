@@ -1,1 +1,3 @@
 Write 130 A
+Write 130 Z
+Read 130 1
