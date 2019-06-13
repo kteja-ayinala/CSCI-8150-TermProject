@@ -48,20 +48,21 @@ public class Block {
 		offset = 0;
 		data = new char[32];
 		int counter = 0;
-		boolean flag = false;
-		for (int i = 0; i < 8; i++) {
+		boolean cycleIncflag = false;
+		for (int i = 0; i < 8; i++) { // Read takes 8 cycle since block is 32 B,
+										// bus width 32 bits i.e 4B
 			int location = index * 32 + counter;
 			for (int j = 0; j < 4; j++) {
-				data[counter] = mdata[counter];
+				data[counter] = mdata[counter]; // each cycle fetches 4 bytes
 				counter++;
 			}
-			if (flag) {
-				System.out.println("Cycle: " + cycle);
-				cycle++;
-			} else {
-				flag = true;
-				cycle++;
-			}
+			 if (cycleIncflag) {
+			System.out.println("Cycle: " + cycle);
+			cycle++;
+			 } else {
+			 cycleIncflag = true;
+			 cycle++;
+			 }
 			System.out.println("Reading data from memory " + location);
 		}
 	}

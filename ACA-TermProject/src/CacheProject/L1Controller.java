@@ -136,7 +136,7 @@ public class L1Controller extends CommonImpl {
 
 	public int isValid(int index, int tag) {
 		int valid = 1;
-		if (!(l1Data.way1[index].getValidBit() == 0) || !(l1Data.way2[index].validBit == 0)
+		if ((l1Data.way1[index].getValidBit() == 0) || (l1Data.way2[index].getValidBit()== 0)
 				|| !(l1Data.way3[index].validBit == 0) || !(l1Data.way4[index].validBit == 0)) {
 			return 0;
 		} else {

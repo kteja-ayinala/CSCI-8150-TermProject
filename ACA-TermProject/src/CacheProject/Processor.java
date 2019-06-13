@@ -35,7 +35,7 @@ public class Processor extends CommonImpl {
 				queueProcessor.enqueue(ins);
 			} else if (kind.equalsIgnoreCase("Write")) {
 				int instructionKind = 1;
-				char data = test.split("")[2].charAt(0);
+				char data = test.split(" ")[2].charAt(0);
 				WriteInstruction ins = new WriteInstruction();
 				ins.setCommand(command);
 				ins.setInstructioNum(instructionNum);
@@ -48,6 +48,6 @@ public class Processor extends CommonImpl {
 			}
 		}
 		reader.close();
-		System.out.println("Processor DONE");
+		System.out.println("Processor read");
 	}
 }

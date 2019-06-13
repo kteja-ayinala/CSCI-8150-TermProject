@@ -13,13 +13,13 @@ public class MainClass extends CommonImpl {
 	private static InstructionTransferer instruction;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		// Initoiate components
+		// Initiate components
 		// System.out.println("Implementation starts from here");
 		Memory memory = new Memory();
 		L1Controller l1Controller = new L1Controller();
 		L2Controller l2Controller = new L2Controller();
 		Processor processor = new Processor();
-
+		int cycle = 0;
 		// Address k = formatAddress(4096, 6, 6, 5);
 		// System.out.println(k);
 
@@ -33,8 +33,6 @@ public class MainClass extends CommonImpl {
 		// System.out.println(testq.isEmpty());
 		//
 		// System.out.println(testq.size());
-
-		int cycle = 0;
 		do {
 			cycle++;
 			System.out.println("---------cycle:" + cycle + "---------");
@@ -44,19 +42,26 @@ public class MainClass extends CommonImpl {
 				System.out.println("P to L1C: " + instruction.getCommand());
 			}
 			if (!l1Controller.queueProcessortoL1C.isEmpty()) {
+				boolean L1Hit = false;
 				instruction = (InstructionTransferer) l1Controller.queueProcessortoL1C.dequeue();
-				if (instruction.getInstructionKind() == 0) { // Read
-																// Instructions
-					boolean L1Hit = false;
+				if (instruction.getInstructionKind() == 0) { // Read Instruction
 					L1Hit = l1Controller.isL1Hit(instruction.getAddress());
 					if (L1Hit) {
-						System.out.println("Tag matched - Hit in L1!!");
+						System.out.println("Tag matched - Hit in L1!!" + instruction.getCommand());
+						// Implement Read Data from L1D
 					} else {
 						l2Controller.queueL1CtoL2C.enqueue(instruction);
 						System.out.println("L1C to L2C: " + instruction.getCommand());
 					}
-				} else {
-					// Write instruction
+				} else {// Write instruction
+					L1Hit = l1Controller.isL1Hit(instruction.getAddress());
+					if (L1Hit) {
+						System.out.println("Tag matched - Hit in L1!!" + instruction.getCommand());
+						// Implement Write Data to L1D and state information
+					} else {
+						l2Controller.queueL1CtoL2C.enqueue(instruction);
+						System.out.println("L1C to L2C: " + instruction.getCommand());
+					}
 				}
 
 			}
@@ -78,6 +83,7 @@ public class MainClass extends CommonImpl {
 					// Write instruction
 				}
 			}
+			// Data will be available in memory, need not check if it is a hit
 			Block memBlock;
 			if (!memory.queueL2CtoMemory.isEmpty()) {
 				instruction = (InstructionTransferer) memory.queueL2CtoMemory.dequeue();
@@ -88,8 +94,8 @@ public class MainClass extends CommonImpl {
 					memBlock = new Block(memory.memory[index].data, index, cycle);
 					cycle = cycle + 7;
 					memBlock.setBlockAddress(index);
-					memBlock.setValidBit(1);
-					memBlock.setDirtyBit(0);
+					// memBlock.setValidBit(1);
+					// memBlock.setDirtyBit(0);
 					ReadInstruction rIns = new ReadInstruction();
 					rIns.setCommand(instruction.getCommand());
 					rIns.setByteEnables(((ReadInstruction) instruction).getByteEnables());
@@ -110,15 +116,22 @@ public class MainClass extends CommonImpl {
 				Address fAddress = formatAddress(address, l2Controller.l2_Tag, l2Controller.l2_Index,
 						l2Controller.l2_Offset);
 				if (instruction.getInstructionKind() == 0) {
+					// Remove unnecessaru instruction parameters after review
 					WriteInstruction wIns = new WriteInstruction();
 					wIns.setAddress(fAddress);
 					wIns.setTransferBlock(instruction.getTransferBlock());
 					wIns.setCommand(instruction.getCommand());
+					wIns.setInstructionKind(instruction.getInstructionKind());
+					wIns.setInstructioNum(instruction.getInstructioNum());
 					wIns.setWriteData(instruction.command.split(" ")[2].charAt(0));
 					l2Controller.queueL2CtoL2D.enqueue(wIns);
-					System.out.println("L2C to L2D: " + instruction.getCommand());
-					l1Controller.queueL2CtoL1C.enqueue(wIns);
-					System.out.println("L2C to L1C: " + instruction.getCommand());
+					System.out.println("L2C to L2D: " + instruction.getCommand()); // Write
+																					// Instruction
+																					// enqueued
+					l1Controller.queueL2CtoL1C.enqueue(instruction); // Read
+																		// Instruction
+																		// enqueued
+					System.out.println("L2C to L1C : " + instruction.getCommand());
 
 				} else {
 					// write
@@ -127,7 +140,7 @@ public class MainClass extends CommonImpl {
 
 			if (!l1Controller.queueL2CtoL1C.isEmpty()) {
 				instruction = (InstructionTransferer) l1Controller.queueL2CtoL1C.dequeue();
-				int byteena = Integer.parseInt(instruction.getCommand().split(" ")[2]);
+				int byteena = ((ReadInstruction) instruction).getByteEnables();
 				int address = instruction.getAddress().getAddress();
 				Address fAddress = formatAddress(address, l1Controller.l1_Tag, l1Controller.l1_Index,
 						l1Controller.l1_Offset);
@@ -135,41 +148,39 @@ public class MainClass extends CommonImpl {
 					WriteInstruction wIns = new WriteInstruction();
 					wIns.setTransferBlock(instruction.getTransferBlock());
 					wIns.setAddress(fAddress);
-					if (instruction.getInstructionKind() == 0) {
-						String ins = "Write" + fAddress.getAddress();
-						wIns.setCommand(ins);
-						l1Controller.queueL1CtoL1D.enqueue(wIns);
-						System.out.println("L1C to L1D: " + instruction.getCommand());
+					// String ins = "Write" + fAddress.getAddress();
+					wIns.setCommand(instruction.getCommand());
+					l1Controller.queueL1CtoL1D.enqueue(wIns);
+					System.out.println("L1C to L1D: " + instruction.getCommand());
+					// logic to return required read information
+					ReadInstruction rIns = new ReadInstruction();
+					rIns.setByteEnables(byteena);
+					rIns.setAddress(fAddress);
+					rIns.setCommand(instruction.getCommand());
+					if (byteena != 0) {
+						char[] data = new char[byteena];
+						Block block = instruction.getTransferBlock();
+						for (int i = 0; i < byteena; i++) {
+							data[i] = block.getData()[Integer.parseInt(fAddress.getOffset(), 2) + i];
+						}
+						rIns.setByteEnableData(data);
+					} else {
 						char returnData = instruction.getTransferBlock().getData()[Integer
 								.parseInt(fAddress.getOffset(), 2)];
-						ReadInstruction rIns = new ReadInstruction();
-						rIns.setByteEnables(byteena);
-						rIns.setReturnData(returnData);
-						rIns.setAddress(fAddress);
-						rIns.setCommand(instruction.getCommand());
-						int byteEnables = byteena;
-						if (byteEnables != 0) {
-							char[] data = new char[byteEnables];
-							Block block = instruction.getTransferBlock();
-							for (int i = 0; i < byteEnables; i++) {
-								data[i] = block.getData()[Integer.parseInt(fAddress.getOffset(), 2) + i];
-							}
-							rIns.setDataBytes(data);
-						}
-						processor.queueL1CtoProcessor.enqueue(rIns);
-						System.out.println("L1C to Processor: " + instruction.getCommand());
-
+						rIns.setSingleCharData(returnData);
 					}
+					processor.queueL1CtoProcessor.enqueue(rIns);
+					System.out.println("L1C to Processor: " + instruction.getCommand());
+
 				} else {
 					// Write
 				}
-
 			}
 
 			if (!processor.queueL1CtoProcessor.isEmpty()) {
 				instruction = (InstructionTransferer) processor.queueL1CtoProcessor.dequeue();
 				if (instruction.getInstructionKind() == 0) {
-					char[] data = ((ReadInstruction) instruction).getDataBytes();
+					char[] data = ((ReadInstruction) instruction).getByteEnableData();
 					String finaldata = String.valueOf(data);
 					System.out.println("Result: " + finaldata);
 				}

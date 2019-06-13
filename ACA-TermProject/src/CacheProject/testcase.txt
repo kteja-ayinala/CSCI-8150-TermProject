@@ -1,2 +1,1 @@
-Read 130 4
-Read 1024 5
+Write 130 A
