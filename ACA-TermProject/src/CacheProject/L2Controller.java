@@ -1,5 +1,7 @@
 package CacheProject;
 
+import java.util.HashMap;
+
 /**
  * @author ${Krishna Teja Ayinala, Sindhura Bonthu}
  *
@@ -20,6 +22,7 @@ public class L2Controller extends CommonImpl {
 	public Queue queueL2CtoL1C = new Queue();
 	L2Data l2Data;
 	WriteBuffer writeBuffer;
+	HashMap<Integer, String> state;
 
 	L2Controller() {
 		l2_Tag = 3;
@@ -31,6 +34,7 @@ public class L2Controller extends CommonImpl {
 
 		l2Data = new L2Data();
 		writeBuffer = new WriteBuffer();
+		state = new HashMap<>();
 		// l2cache = new Block[512];
 		//
 		// ReadInstruction rdIns0 = new ReadInstruction();
@@ -171,4 +175,16 @@ public class L2Controller extends CommonImpl {
 		return block;
 	}
 
+	public String getState(int address) {
+		return state.get(address);
+	}
+
+	public void setState(int address, String string) {
+		state.put(address, string);
+
+	}
+
+	public void clear(int address) {
+		state.remove(address);
+	}
 }

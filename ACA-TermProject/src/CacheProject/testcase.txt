@@ -1,3 +1,2 @@
-Write 130 A
+Write 130 B
 Read 130 2
-Read 129 3

@@ -6,22 +6,22 @@ package CacheProject;
  */
 public class VictimCache { // only clean lines
 	public Queue queueL1CtoVictimCache;
-	int victim_Tag;
-	int victim_Index;
-	int victim_Offset;
-	int victim_blocks;
-	int victim_BlockSize;
-	int victim_CpuBits;
+//	int victim_Tag;
+//	int victim_Index;
+//	int victim_Offset;
+//	int victim_blocks;
+//	int victim_BlockSize;
+//	int victim_CpuBits;
 	Block vCache[];
 	boolean first, second;
 
 	public VictimCache() {
-		victim_Tag = 11;
-		victim_Index = 1;
-		victim_Offset = 5;
-		victim_blocks = 2;
-		victim_BlockSize = 32;
-		victim_CpuBits = 17;
+//		victim_Tag = 11;
+//		victim_Index = 1;
+//		victim_Offset = 5;
+//		victim_blocks = 2;
+//		victim_BlockSize = 32;
+//		victim_CpuBits = 17;
 		queueL1CtoVictimCache = new Queue();
 		first = false;
 		second = true;
@@ -65,11 +65,11 @@ public class VictimCache { // only clean lines
 		}
 	}
 
-	public int getVictim_Tag() {
-		return victim_Tag;
-	}
-
-	public void setVictim_Tag(int victim_Tag) {
-		this.victim_Tag = victim_Tag;
-	}
+//	public int getVictim_Tag() {
+//		return victim_Tag;
+//	}
+//
+//	public void setVictim_Tag(int victim_Tag) {
+//		this.victim_Tag = victim_Tag;
+//	}
 }

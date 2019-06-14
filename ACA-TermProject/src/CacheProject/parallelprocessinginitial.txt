@@ -1,0 +1,71 @@
+Instructions added to Memory
+Instructions added to L1 Instruction Cache
+Instructions added to L2
+Processor read
+---------cycle:1---------
+P to L1C: Write 130 A
+L1C to L2C: Write 130 A
+L1C main state: missi, state assign: WrwaitL2d Write 130 A
+L2C to Memory: state assign: Rdwaitmemd Write 130 A
+Reading data from memory 128
+---------cycle:2---------
+Reading data from memory 132
+---------cycle:3---------
+Reading data from memory 136
+---------cycle:4---------
+Reading data from memory 140
+---------cycle:5---------
+Reading data from memory 144
+---------cycle:6---------
+Reading data from memory 148
+---------cycle:7---------
+Reading data from memory 152
+---------cycle:8---------
+Reading data from memory 156
+Memory to L2C: Write 130 A
+L2C to L2D: Write 130 A
+L2C to L1C : Write 130 A
+---------cycle:9---------
+P to L1C: Read 130 2
+L1C to L2C: Read 130 2
+L1C main state: missi, state assign: RdwaitL2d Read 130 2
+L1C to L1D: Write 130 A
+L2C to Memory: state assign: Rdwaitmemd Read 130 2
+L2D Data updated: Write 130 A
+ABADEFGHIJKLMNOPQRSTUVWXYZABCDEF
+Reading data from memory 128
+---------cycle:10---------
+Reading data from memory 132
+---------cycle:11---------
+Reading data from memory 136
+---------cycle:12---------
+Reading data from memory 140
+---------cycle:13---------
+Reading data from memory 144
+---------cycle:14---------
+Reading data from memory 148
+---------cycle:15---------
+Reading data from memory 152
+---------cycle:16---------
+Reading data from memory 156
+Memory to L2C: Read 130 2
+L2C to L2D: Read 130 2
+L2C to L1C : Read 130 2
+---------cycle:17---------
+P to L1C: Read 129 3
+Hit in L1: Read 129 3
+L1D write Data update: Write 130 A
+ABADEFGHIJKLMNOPQRSTUVWXYZABCDEF
+L1C to L1D: Read 130 2
+L1C to Processor: Read 130 2
+!!****************************!!
+Result: CD for Read 130 2
+!!****************************!!
+L2D Data updated: Read 130 2
+---------cycle:18---------
+L1C to Processor: Data sent after hit Read 129 3
+!!****************************!!
+Result: BAD for Read 129 3
+!!****************************!!
+---------cycle:19---------
+L1D block data updated from main memory: Read 130 2

@@ -26,7 +26,7 @@ public class L1Controller extends CommonImpl {
 	L1Data l1Data;
 	VictimCache victimCache;
 	WriteBuffer writeBuffer;
-	private HashMap<Integer, String> state = new HashMap<>();
+	private HashMap<Integer, String> state;
 
 	// Integer is the address and String is the state
 
@@ -41,7 +41,7 @@ public class L1Controller extends CommonImpl {
 		l1Data = new L1Data();
 		victimCache = new VictimCache();
 		writeBuffer = new WriteBuffer();
-
+		state = new HashMap<>();
 		// L1 Instruction Cache
 		way1 = new Block[64];
 		way2 = new Block[64];
@@ -248,13 +248,17 @@ public class L1Controller extends CommonImpl {
 
 	}
 
-	public HashMap<Integer, String> getState() {
-		return state;
+	public String getState(int address) {
+		return state.get(address);
 	}
 
 	public void setState(int address, String string) {
-		this.state = state;
+		state.put(address, string);
 
+	}
+
+	public void clear(int address) {
+		state.remove(address);
 	}
 
 }
