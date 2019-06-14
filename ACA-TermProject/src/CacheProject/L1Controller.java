@@ -127,10 +127,10 @@ public class L1Controller extends CommonImpl {
 	public boolean isL1Hit(Address address) {
 		int index = Integer.parseInt(address.getIndex(), 2);
 		int tag = Integer.parseInt(address.getTag(), 2);
-		boolean isInway1 = ((l1Data.way1[index].getTag() == tag) && l1Data.way1[tag].getValidBit() == 1);
-		boolean isInway2 = ((l1Data.way2[index].getTag() == tag) && l1Data.way2[tag].getValidBit() == 1);
-		boolean isInway3 = ((l1Data.way3[index].getTag() == tag) && l1Data.way3[tag].getValidBit() == 1);
-		boolean isInway4 = ((l1Data.way4[index].getTag() == tag) && l1Data.way4[tag].getValidBit() == 1);
+		boolean isInway1 = ((l1Data.way1[index].getTag() == tag) && l1Data.way1[index].getValidBit() == 1);
+		boolean isInway2 = ((l1Data.way2[index].getTag() == tag) && l1Data.way2[index].getValidBit() == 1);
+		boolean isInway3 = ((l1Data.way3[index].getTag() == tag) && l1Data.way3[index].getValidBit() == 1);
+		boolean isInway4 = ((l1Data.way4[index].getTag() == tag) && l1Data.way4[index].getValidBit() == 1);
 		if (isInway1 || isInway2 || isInway3 || isInway4) {
 			return true;
 		}
@@ -180,22 +180,6 @@ public class L1Controller extends CommonImpl {
 		return dirty;
 	}
 
-	public void l1write(Block transferBlock, Address fAddress) {
-		if (l1Data.way1[Integer.parseInt(fAddress.getIndex(), 2)].getValidBit() == 0) {
-			l1Data.way1[Integer.parseInt(fAddress.getIndex(), 2)] = transferBlock;
-		}
-		if (l1Data.way2[Integer.parseInt(fAddress.getIndex(), 2)].getValidBit() == 0) {
-			l1Data.way2[Integer.parseInt(fAddress.getIndex(), 2)] = transferBlock;
-		}
-		if (l1Data.way3[Integer.parseInt(fAddress.getIndex(), 2)].getValidBit() == 0) {
-			l1Data.way3[Integer.parseInt(fAddress.getIndex(), 2)] = transferBlock;
-		}
-		if (l1Data.way4[Integer.parseInt(fAddress.getIndex(), 2)].getValidBit() == 0) {
-			l1Data.way4[Integer.parseInt(fAddress.getIndex(), 2)] = transferBlock;
-		}
-
-	}
-
 	public void l1writeChar(char singleCharData, Address fAddress) {
 
 		int tag = Integer.parseInt(fAddress.getTag());
@@ -204,16 +188,13 @@ public class L1Controller extends CommonImpl {
 		if (l1Data.way1[index].getTag() == tag) {
 			l1Data.way1[index].setBitData(offset, singleCharData);
 			l1Data.way1[index].setDirtyBit(1);
-		}
-		if (l1Data.way2[index].getTag() == tag) {
+		} else if (l1Data.way2[index].getTag() == tag) {
 			l1Data.way2[index].setBitData(offset, singleCharData);
 			l1Data.way2[index].setDirtyBit(1);
-		}
-		if (l1Data.way3[index].getTag() == tag) {
+		} else if (l1Data.way3[index].getTag() == tag) {
 			l1Data.way3[index].setBitData(offset, singleCharData);
 			l1Data.way3[index].setDirtyBit(1);
-		}
-		if (l1Data.way4[index].getTag() == tag) {
+		} else if (l1Data.way4[index].getTag() == tag) {
 			l1Data.way4[index].setBitData(offset, singleCharData);
 			l1Data.way4[index].setDirtyBit(1);
 		}
@@ -237,6 +218,20 @@ public class L1Controller extends CommonImpl {
 			block = l1Data.way4[index];
 		}
 		return block;
+	}
+
+	public void l1write(Block transferBlock, Address fAddress) {
+		int index = Integer.parseInt(fAddress.getIndex(), 2);
+		if (l1Data.way1[index].getValidBit() == 0) {
+			l1Data.way1[index] = transferBlock;
+		} else if (l1Data.way2[index].getValidBit() == 0) {
+			l1Data.way2[index] = transferBlock;
+		} else if (l1Data.way3[index].getValidBit() == 0) {
+			l1Data.way3[index] = transferBlock;
+		} else if (l1Data.way4[index].getValidBit() == 0) {
+			l1Data.way4[index] = transferBlock;
+		}
+
 	}
 
 }

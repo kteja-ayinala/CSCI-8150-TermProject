@@ -11,10 +11,10 @@ public class L1Data {
 	int l1_SetCount;
 	int l1_BlockSize;
 	int l1_CpuBits;
-	Block way1[];
-	Block way2[];
-	Block way3[];
-	Block way4[];
+	public Block way1[];
+	public Block way2[];
+	public Block way3[];
+	public Block way4[];
 	public Queue queueL1CtoL1D = new Queue();
 	public Queue queueL1DtoL1C = new Queue();
 

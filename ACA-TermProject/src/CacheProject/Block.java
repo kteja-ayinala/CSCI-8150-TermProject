@@ -57,7 +57,7 @@ public class Block {
 				counter++;
 			}
 			if (cycleIncflag) {
-				System.out.println("Cycle: " + cycle);
+				System.out.println("---------cycle:" + cycle + "---------");
 				cycle++;
 			} else {
 				cycleIncflag = true;
