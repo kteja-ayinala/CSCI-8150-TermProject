@@ -29,7 +29,7 @@ public class MainClass extends CommonImpl {
 
 		// Queue testq = new Queue();
 		// testq.enqueue("1");
-		// testq.enqueue("3");
+		// testq.enqueue("3");f
 		// testq.enqueue("2");
 		// testq.enqueue(" string");
 		// testq.dequeue();
@@ -56,28 +56,82 @@ public class MainClass extends CommonImpl {
 						if (l1Controller.victimCache.isVictimCacheHit(instruction.getAddress())) {
 							System.out.println("Hit in VC: " + instruction.getCommand());
 							l1Controller.victimCache.queueL1CtoVictimCache.enqueue(instruction);
+							l1Controller.setState(instruction.getAddress().getAddress(), "RdwaitVCd");
 						} else if (l1Controller.writeBuffer.isBuffercacheHit(instruction.getAddress())) {
 							System.out.println("Hit in WB: " + instruction.getCommand());
 							l1Controller.writeBuffer.queuetoWriteBuffer.enqueue(instruction);
+							l1Controller.setState(instruction.getAddress().getAddress(), "RdwaitWBd");
 						} else {
 							System.out.println("Hit in L1: " + instruction.getCommand());
 							l1Controller.l1Data.queueL1CtoL1D.enqueue(instruction);
+							l1Controller.setState(instruction.getAddress().getAddress(), "Rdwaitd");
 						}
 					} else {
-						l2Controller.queueL1CtoL2C.enqueue(instruction);
-						System.out.println("L1C to L2C: " + instruction.getCommand());
+						int index = Integer.parseInt(instruction.getAddress().getIndex(), 2);
+						int tag = Integer.parseInt(instruction.getAddress().getTag(), 2);
+
+						if (l1Controller.isValid(index, tag) == 1) {
+							if (l1Controller.isDirty(index, tag) == 1) {
+								l2Controller.queueL1CtoL2C.enqueue(instruction);
+								l1Controller.setState(instruction.getAddress().getAddress(), "Rd2waitd");
+								System.out.println("L1C to L2C: " + instruction.getCommand());
+								System.out.println(
+										"L1C main state: missd, state assign: Rd2waitd " + instruction.getCommand());
+							} else { // need not write back
+								l2Controller.queueL1CtoL2C.enqueue(instruction);
+								l1Controller.setState(instruction.getAddress().getAddress(), "RdwaitL2d");
+								System.out.println("L1C to L2C: " + instruction.getCommand());
+								System.out.println(
+										"L1C main state: missc, state assign: Rd2waitL2d " + instruction.getCommand());
+							}
+							//
+						} else {
+							// invalid, missi
+							l2Controller.queueL1CtoL2C.enqueue(instruction);
+							l1Controller.setState(instruction.getAddress().getAddress(), "RdwaitL2d");
+							System.out.println("L1C to L2C: " + instruction.getCommand());
+							System.out.println(
+									"L1C main state: missi, state assign: RdwaitL2d " + instruction.getCommand());
+
+						}
 					}
 				} else {// Write instruction
 					L1Hit = l1Controller.isL1Hit(instruction.getAddress());
 					if (L1Hit) {
-						System.out.println("Hit in L1: " + instruction.getCommand());
-						// Implement Write Data to L1D and state information
+						l1Controller.setState(instruction.getAddress().getAddress(), "Wrwaitd");
+						l1Controller.l1Data.queueL1CtoL1D.enqueue(instruction);
+						System.out.println("L1C to L1D: " + instruction.getCommand());
+						System.out.println("Hit in L1 for write: , state assign: Wrwaitd " + instruction.getCommand());
 					} else {
+						int index = Integer.parseInt(instruction.getAddress().getIndex(), 2);
+						int tag = Integer.parseInt(instruction.getAddress().getTag(), 2);
 						if (l1Controller.isValid(Integer.parseInt(instruction.getAddress().getIndex(), 2),
 								Integer.parseInt(instruction.getAddress().getTag(), 2)) == 1) {
+							if (l1Controller.isDirty(index, tag) == 1) {
+								// write back
+								l2Controller.queueL1CtoL2C.enqueue(instruction);
+								l1Controller.setState(instruction.getAddress().getAddress(), "Wr2waitd");
+								System.out.println("L1C to L2C: " + instruction.getCommand());
+								System.out.println(
+										"L1C main state: missd, state assign: Wr2waitd " + instruction.getCommand());
+								//
+							} else { // need not write back
+								ReadInstruction rIns = new ReadInstruction();
+								rIns.setAddress(instruction.getAddress());
+								rIns.setCommand(instruction.getCommand());
+								rIns.setInstructioNum(instruction.instructioNum);
+								rIns.setSingleCharData(((WriteInstruction) instruction).getWriteData());
+								rIns.setProcessorInstructionKind(instruction.getProcessorInstructionKind());
+								rIns.setInstructionTransferType(0);
+								l2Controller.queueL1CtoL2C.enqueue(rIns);
+								l1Controller.setState(instruction.getAddress().getAddress(), "WrwaitL2d");
+								System.out.println("L1C to L2C: " + instruction.getCommand());
+								System.out.println(
+										"L1C main state: missc, state assign: Rd2waitL2d " + instruction.getCommand());
+
+							}
 
 						} else {
-							System.out.println("L1C write operation compulsory miss: missi" + instruction.getCommand());
 							ReadInstruction rIns = new ReadInstruction();
 							rIns.setAddress(instruction.getAddress());
 							rIns.setCommand(instruction.getCommand());
@@ -86,7 +140,9 @@ public class MainClass extends CommonImpl {
 							rIns.setProcessorInstructionKind(instruction.getProcessorInstructionKind());
 							rIns.setInstructionTransferType(0);
 							l2Controller.queueL1CtoL2C.enqueue(rIns);
+							l1Controller.setState(instruction.getAddress().getAddress(), "WrwaitL2d");
 							System.out.println("L1C to L2C: " + instruction.getCommand());
+							System.out.println("L1C main state: missi, state assign: WrwaitL2d " + instruction.getCommand());
 						}
 					}
 				}

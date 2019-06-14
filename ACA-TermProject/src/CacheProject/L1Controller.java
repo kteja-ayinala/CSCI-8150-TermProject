@@ -28,6 +28,8 @@ public class L1Controller extends CommonImpl {
 	WriteBuffer writeBuffer;
 	private HashMap<Integer, String> state = new HashMap<>();
 
+	// Integer is the address and String is the state
+
 	L1Controller() {
 		l1_Tag = 6;
 		l1_Index = 6;
@@ -243,6 +245,15 @@ public class L1Controller extends CommonImpl {
 
 	public static void setvalid(int parseInt, int parseInt2, int i) {
 		// TODO Auto-generated method stub
+
+	}
+
+	public HashMap<Integer, String> getState() {
+		return state;
+	}
+
+	public void setState(int address, String string) {
+		this.state = state;
 
 	}
 
