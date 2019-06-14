@@ -1,5 +1,7 @@
 package CacheProject;
 
+import java.util.HashMap;
+
 /**
  * @author ${Krishna Teja Ayinala, Sindhura Bonthu}
  *
@@ -22,6 +24,7 @@ public class L1Controller extends CommonImpl {
 	public Queue queueL1CtoProcessor = new Queue();
 	public Queue queueL2CtoL1C = new Queue();
 	L1Data l1Data;
+	private HashMap<Integer, String> state = new HashMap<>();
 
 	L1Controller() {
 		l1_Tag = 6;
@@ -217,8 +220,23 @@ public class L1Controller extends CommonImpl {
 	}
 
 	public Block readBlock(Address fAddress) {
+		int tag = Integer.parseInt(fAddress.getTag());
+		int index = Integer.parseInt(fAddress.getIndex(), 2);
+		Block block = null;
 
-		return null;
+		if (l1Data.way1[index].getTag() == tag) {
+			block = l1Data.way1[index];
+		}
+		if (l1Data.way2[index].getTag() == tag) {
+			block = l1Data.way2[index];
+		}
+		if (l1Data.way3[index].getTag() == tag) {
+			block = l1Data.way3[index];
+		}
+		if (l1Data.way4[index].getTag() == tag) {
+			block = l1Data.way4[index];
+		}
+		return block;
 	}
 
 }

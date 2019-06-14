@@ -159,4 +159,14 @@ public class L2Controller extends CommonImpl {
 
 	}
 
+	public Block readBlock(Address fAddress) {
+		int tag = Integer.parseInt(fAddress.getTag());
+		int index = Integer.parseInt(fAddress.getIndex(), 2);
+		Block block = null;
+		if (l2Data.l2cache[index].getTag() == tag) {
+			block = l2Data.l2cache[index];
+		}
+		return block;
+	}
+
 }

@@ -1,3 +1,13 @@
-Write 130 A
-Write 130 Z
+Read 130 1
+Write 1000 A
+Write 1000 A
+Write 1000 A
+Read 131 1
+Write 1000 A
+Write 1000 A
+Write 1000 A
+Write 1000 A
+Write 1000 A
+Write 1000 A
+Write 1000 A
 Read 130 1
