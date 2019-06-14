@@ -25,6 +25,7 @@ public class VictimCache { // only clean lines
 		queueL1CtoVictimCache = new Queue();
 		first = false;
 		second = true;
+		vCache = new Block[2];
 		for (int i = 0; i < 2; i++) {
 			vCache[i] = new Block();
 			vCache[i].setValidBit(0);
@@ -35,11 +36,11 @@ public class VictimCache { // only clean lines
 	public boolean isVictimCacheHit(Address address) {
 		int tag = Integer.parseInt(address.getTag(), 2);
 		for (int i = 0; i < 2; i++) {
-			if (vCache[i].getTag() == tag) {
+			if (vCache[i].getTag() == tag && vCache[i].getValidBit() == 1) {
 				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	public Block getVBlock(Address address) {

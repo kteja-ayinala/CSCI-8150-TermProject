@@ -207,7 +207,7 @@ public class L1Controller extends CommonImpl {
 	Block block = null;
 
 	public Block readBlock(Address fAddress) {
-		int tag = Integer.parseInt(fAddress.getTag());
+		int tag = Integer.parseInt(fAddress.getTag(), 2);
 		int index = Integer.parseInt(fAddress.getIndex(), 2);
 
 		if (l1Data.way1[index].getTag() == tag) {
@@ -233,6 +233,16 @@ public class L1Controller extends CommonImpl {
 		} else if (l1Data.way4[index].getValidBit() == 0) {
 			l1Data.way4[index] = transferBlock;
 		}
+
+	}
+
+	public void setDirty(int parseInt, int parseInt2, int i) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public static void setvalid(int parseInt, int parseInt2, int i) {
+		// TODO Auto-generated method stub
 
 	}
 

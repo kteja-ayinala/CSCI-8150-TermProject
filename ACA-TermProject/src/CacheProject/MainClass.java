@@ -49,8 +49,16 @@ public class MainClass extends CommonImpl {
 																		// Instruction
 					L1Hit = l1Controller.isL1Hit(instruction.getAddress());
 					if (L1Hit) {
-						System.out.println("Tag matched - Hit in L1 " + instruction.getCommand());
-						l1Controller.l1Data.queueL1CtoL1D.enqueue(instruction);
+						if (l1Controller.victimCache.isVictimCacheHit(instruction.getAddress())) {
+							System.out.println("Hit in VC: " + instruction.getCommand());
+							l1Controller.victimCache.queueL1CtoVictimCache.enqueue(instruction);
+						} else if (l1Controller.writeBuffer.isBuffercacheHit(instruction.getAddress())) {
+							System.out.println("Hit in WB: " + instruction.getCommand());
+							l1Controller.writeBuffer.queuetoWriteBuffer.enqueue(instruction);
+						} else {
+							System.out.println("Hit in L1: " + instruction.getCommand());
+							l1Controller.l1Data.queueL1CtoL1D.enqueue(instruction);
+						}
 					} else {
 						l2Controller.queueL1CtoL2C.enqueue(instruction);
 						System.out.println("L1C to L2C: " + instruction.getCommand());
@@ -58,7 +66,7 @@ public class MainClass extends CommonImpl {
 				} else {// Write instruction
 					L1Hit = l1Controller.isL1Hit(instruction.getAddress());
 					if (L1Hit) {
-						System.out.println("Tag matched - Hit in L1!! " + instruction.getCommand());
+						System.out.println("Hit in L1: " + instruction.getCommand());
 						// Implement Write Data to L1D and state information
 					} else {
 						if (l1Controller.isValid(Integer.parseInt(instruction.getAddress().getIndex(), 2),
@@ -150,6 +158,56 @@ public class MainClass extends CommonImpl {
 				System.out.println("L1C to Processor: Data sent after hit " + instruction.getCommand());
 			}
 
+			if (!l1Controller.victimCache.queueL1CtoVictimCache.isEmpty()) {
+				instruction = (InstructionTransferer) l1Controller.victimCache.queueL1CtoVictimCache.dequeue();
+				int byteena = ((ReadInstruction) instruction).getByteEnables();
+				int address = instruction.getAddress().getAddress();
+				Address fAddress = formatAddress(address, l1Controller.victimCache.victim_Tag,
+						l1Controller.victimCache.victim_Index, l1Controller.victimCache.victim_Offset);
+				Block block = null;
+				if (instruction.getProcessorInstructionKind() == 0) {
+					block = l1Controller.readBlock(fAddress);
+					ReadInstruction rIns = new ReadInstruction();
+					rIns.setByteEnables(byteena);
+					rIns.setAddress(fAddress);
+					rIns.setCommand(instruction.getCommand());
+					rIns.setProcessorInstructionKind(instruction.getProcessorInstructionKind());
+					rIns.setInstructionTransferType(0);
+					rIns.setSingleCharData(block.getData()[Integer.parseInt(fAddress.getOffset(), 2)]);
+					rIns.setTransferBlock(block);
+					l1Controller.l1Data.queueL1DtoL1C.enqueue(rIns);
+					System.out.println("L1VC to L1C: Data sent after hit " + instruction.getCommand());
+				} else {
+					block = instruction.getTransferBlock();
+					l1Controller.victimCache.queueL1CtoVictimCache.enqueue(block);
+					System.out.println("L1C to L1VC: " + instruction.getCommand());
+				}
+			}
+
+			if (!l1Controller.writeBuffer.queuetoWriteBuffer.isEmpty()) {
+				instruction = (InstructionTransferer) l1Controller.writeBuffer.queuetoWriteBuffer.dequeue();
+				int address = instruction.getAddress().getAddress();
+				Address fAddress = formatAddress(address, l1Controller.writeBuffer.buffer_Tag,
+						l1Controller.writeBuffer.buffer_Index, l1Controller.writeBuffer.buffer_Offset);
+				Block block = null;
+				if (instruction.getProcessorInstructionKind() == 0) {
+					block = l1Controller.readBlock(fAddress);
+					ReadInstruction rIns = new ReadInstruction();
+					rIns.setAddress(fAddress);
+					rIns.setCommand(instruction.getCommand());
+					rIns.setProcessorInstructionKind(instruction.getProcessorInstructionKind());
+					rIns.setInstructionTransferType(0);
+					rIns.setSingleCharData(block.getData()[Integer.parseInt(fAddress.getOffset(), 2)]);
+					rIns.setTransferBlock(block);
+					l1Controller.l1Data.queueL1DtoL1C.enqueue(rIns);
+					System.out.println("L1WB to L1C: Data sent after hit " + instruction.getCommand());
+				} else {
+					block = instruction.getTransferBlock();
+					l1Controller.writeBuffer.queuetoWriteBuffer.enqueue(block);
+					System.out.println("L1C to L1WB: " + instruction.getCommand());
+				}
+			}
+
 			if (!l1Controller.queueL2CtoL1C.isEmpty()) {
 				instruction = (InstructionTransferer) l1Controller.queueL2CtoL1C.dequeue();
 				int byteena = ((ReadInstruction) instruction).getByteEnables();
@@ -195,8 +253,13 @@ public class MainClass extends CommonImpl {
 							Integer.parseInt(fAddress.getTag(), 2)) == 1) {
 						if (l1Controller.isDirty(Integer.parseInt(fAddress.getIndex(), 2),
 								Integer.parseInt(fAddress.getTag(), 2)) == 1) {
+							Block block = l1Controller.readBlock(fAddress);
+							l1Controller.writeBuffer.setBlock(block, fAddress);
+							l1Controller.setDirty(Integer.parseInt(fAddress.getIndex(), 2),
+									Integer.parseInt(fAddress.getTag(), 2), 0);
+							L1Controller.setvalid(Integer.parseInt(fAddress.getIndex(), 2),
+									Integer.parseInt(fAddress.getTag(), 2), 0);
 
-							// have to implement
 						}
 
 					}

@@ -15,13 +15,14 @@ public class WriteBuffer {
 	Block bCache[];
 
 	public WriteBuffer() {
-		buffer_Tag = 12;
-		buffer_Index = 0;
+		buffer_Tag = 11;
+		buffer_Index = 1;
 		buffer_Offset = 5;
 		buffer_blocks = 2;
 		buffer_BlockSize = 32;
 		buffer_CpuBits = 17;
-
+		queuetoWriteBuffer = new Queue();
+		bCache = new Block[2];
 		for (int i = 0; i < 2; i++) {
 			bCache[i] = new Block();
 			bCache[i].setValidBit(0);
@@ -32,14 +33,14 @@ public class WriteBuffer {
 	public boolean isBuffercacheHit(Address address) {
 		int tag = Integer.parseInt(address.getTag(), 2);
 		for (int i = 0; i < 2; i++) {
-			if (bCache[i].getTag() == tag) {
+			if (bCache[i].getTag() == tag && bCache[i].getValidBit() == 1) {
 				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
-	public Block getBBlock(Address address) {
+	public Block getBlock(Address address) {
 		int index = Integer.parseInt(address.getIndex(), 2);
 		int tag = Integer.parseInt(address.getTag(), 2);
 		Block block = null;
@@ -50,7 +51,7 @@ public class WriteBuffer {
 
 	}
 
-	public void setBBlock(Block transferBlock, Address address) {
+	public void setBlock(Block transferBlock, Address address) {
 		int index = Integer.parseInt(address.getIndex(), 2);
 		if (bCache[index].getValidBit() == 0 && transferBlock.getDirtyBit() != 0) {
 			bCache[index] = transferBlock;
