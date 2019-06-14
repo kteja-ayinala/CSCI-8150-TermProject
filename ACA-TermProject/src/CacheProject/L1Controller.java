@@ -200,21 +200,19 @@ public class L1Controller extends CommonImpl {
 		}
 	}
 
+	Block block = null;
+
 	public Block readBlock(Address fAddress) {
 		int tag = Integer.parseInt(fAddress.getTag());
 		int index = Integer.parseInt(fAddress.getIndex(), 2);
-		Block block = null;
 
 		if (l1Data.way1[index].getTag() == tag) {
 			block = l1Data.way1[index];
-		}
-		if (l1Data.way2[index].getTag() == tag) {
+		} else if (l1Data.way2[index].getTag() == tag) {
 			block = l1Data.way2[index];
-		}
-		if (l1Data.way3[index].getTag() == tag) {
+		} else if (l1Data.way3[index].getTag() == tag) {
 			block = l1Data.way3[index];
-		}
-		if (l1Data.way4[index].getTag() == tag) {
+		} else if (l1Data.way4[index].getTag() == tag) {
 			block = l1Data.way4[index];
 		}
 		return block;
