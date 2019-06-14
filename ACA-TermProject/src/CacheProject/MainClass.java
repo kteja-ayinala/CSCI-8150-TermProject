@@ -1,10 +1,12 @@
 package CacheProject;
 
+import java.io.FileOutputStream;
 /**
  * @author ${Krishna Teja Ayinala, Sindhura Bonthu}
  *
  */
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,8 @@ public class MainClass extends CommonImpl {
 	private static InstructionTransferer instruction;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
+		// System.setOut(new PrintStream(new FileOutputStream(curDir +
+		// "/src/CacheProject/output.txt")));
 		// Initiate components
 		// System.out.println("Implementation starts from here");
 		Memory memory = new Memory();
@@ -281,8 +285,11 @@ public class MainClass extends CommonImpl {
 				if (instruction.getProcessorInstructionKind() == 0) {
 					if (instruction.getInstructionTransferType() == 0) {
 						char[] data = ((ReadInstruction) instruction).getByteEnableData();
+
 						String finaldata = String.valueOf(data);
+						System.out.println("!!****************************!!");
 						System.out.println("Result: " + finaldata + " for " + instruction.getCommand());
+						System.out.println("!!****************************!!");
 					}
 				}
 			}

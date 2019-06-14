@@ -11,9 +11,11 @@ import java.io.IOException;
 public class Processor extends CommonImpl {
 	public Queue queueProcessor = new Queue();
 	public Queue queueL1CtoProcessor = new Queue();
-	String testcaseFile = "/Users/krishnatejaayinala/CSCI-8150-TermProject/ACA-TermProject/src/CacheProject/testcase.txt";
+
+	String testcaseFile = curDir + "/src/CacheProject/SingleRead.txt";
 
 	Processor() throws IOException {
+		// System.out.println(curDir);
 		BufferedReader reader = new BufferedReader(new FileReader(testcaseFile));
 		String test = null;
 		int insCount = 0;

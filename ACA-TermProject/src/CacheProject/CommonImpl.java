@@ -9,6 +9,7 @@ package CacheProject;
  */
 public class CommonImpl {
 	static int cpubits = 17;
+	static String curDir = System.getProperty("user.dir");
 
 	public static Address formatAddress(int address, int tagBits, int indexBits, int offsetBits) {
 		Address fAddress = new Address();

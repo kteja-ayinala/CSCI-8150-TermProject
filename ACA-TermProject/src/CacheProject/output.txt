@@ -1,0 +1,35 @@
+Instructions added to Memory
+Instructions added to L1 Instruction Cache
+Instructions added to L2
+Processor read
+---------cycle:1---------
+P to L1C: Read 130 3
+L1C to L2C: Read 130 3
+L2C to Memory: Read 130 3
+Reading data from memory 128
+---------cycle:2---------
+Reading data from memory 132
+---------cycle:3---------
+Reading data from memory 136
+---------cycle:4---------
+Reading data from memory 140
+---------cycle:5---------
+Reading data from memory 144
+---------cycle:6---------
+Reading data from memory 148
+---------cycle:7---------
+Reading data from memory 152
+---------cycle:8---------
+Reading data from memory 156
+Memory to L2C: Read 130 3
+L2C to L2D: Read 130 3
+L2C to L1C : Read 130 3
+---------cycle:9---------
+L1C to L1D: Read 130 3
+L1C to Processor: Read 130 3
+!!****************************!!
+Result: CDE for Read 130 3
+!!****************************!!
+L2D Data updated: Read 130 3
+---------cycle:10---------
+L1D block data updated from main memory: Read 130 3
