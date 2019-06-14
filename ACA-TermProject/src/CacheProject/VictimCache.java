@@ -32,7 +32,7 @@ public class VictimCache { // only clean lines
 
 	}
 
-	public boolean isL1Hit(Address address) {
+	public boolean isVictimCacheHit(Address address) {
 		int tag = Integer.parseInt(address.getTag(), 2);
 		for (int i = 0; i < 2; i++) {
 			if (vCache[i].getTag() == tag) {
