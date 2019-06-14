@@ -24,6 +24,8 @@ public class L1Controller extends CommonImpl {
 	public Queue queueL1CtoProcessor = new Queue();
 	public Queue queueL2CtoL1C = new Queue();
 	L1Data l1Data;
+	VictimCache victimCache;
+	WriteBuffer writeBuffer;
 	private HashMap<Integer, String> state = new HashMap<>();
 
 	L1Controller() {
@@ -35,6 +37,8 @@ public class L1Controller extends CommonImpl {
 		l1_CpuBits = 17;
 
 		l1Data = new L1Data();
+		victimCache = new VictimCache();
+		writeBuffer = new WriteBuffer();
 
 		// L1 Instruction Cache
 		way1 = new Block[64];

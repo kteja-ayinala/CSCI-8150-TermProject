@@ -19,6 +19,7 @@ public class L2Controller extends CommonImpl {
 	public Queue queueL1CtoL2C = new Queue();
 	public Queue queueL2CtoL1C = new Queue();
 	L2Data l2Data;
+	WriteBuffer writeBuffer;
 
 	L2Controller() {
 		l2_Tag = 3;
@@ -29,6 +30,7 @@ public class L2Controller extends CommonImpl {
 		l2_CpuBits = 17;
 
 		l2Data = new L2Data();
+		writeBuffer = new WriteBuffer();
 		// l2cache = new Block[512];
 		//
 		// ReadInstruction rdIns0 = new ReadInstruction();
