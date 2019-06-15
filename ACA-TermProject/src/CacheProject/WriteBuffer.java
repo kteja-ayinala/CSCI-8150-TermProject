@@ -52,11 +52,11 @@ public class WriteBuffer {
 	}
 
 	public void setBlock(Block transferBlock, Address address) {
-		int index = Integer.parseInt(address.getIndex(), 2);
-		if (bCache[index].getValidBit() == 0 && transferBlock.getDirtyBit() != 0) {
-			bCache[index] = transferBlock;
-		} else {
-			// replace
+		if (bCache[0].getValidBit() == 0 && transferBlock.getDirtyBit() == 0) {
+			bCache[0] = transferBlock;
+			System.out.println("written to WB after LRU" );
+		} else if (bCache[1].getValidBit() == 0 && transferBlock.getDirtyBit() == 0) {
+			bCache[1] = transferBlock;
 		}
 	}
 

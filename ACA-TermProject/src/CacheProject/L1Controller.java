@@ -297,7 +297,12 @@ public class L1Controller extends CommonImpl {
 			l1Data.way4[index] = transferBlock;
 			l1Data.way4[index].setLru(3);
 		}
-		victimCache.setVBlock(vBlock, fAddress);
+		if(vBlock.getDirtyBit() == 0){
+			victimCache.setVBlock(vBlock, fAddress);
+		}else{
+			writeBuffer.setBlock(vBlock, fAddress);
+		}
+		
 
 	}
 

@@ -60,8 +60,6 @@ public class VictimCache extends CommonImpl{ // only clean lines
 			System.out.println("written to victim cache after LRU" );
 		} else if (vCache[1].getValidBit() == 0 && transferBlock.getDirtyBit() != 0) {
 			vCache[1] = transferBlock;
-		}else{
-			
 		}
 	}
 
