@@ -226,16 +226,90 @@ public class L1Controller extends CommonImpl {
 
 	public void l1write(Block transferBlock, Address fAddress) {
 		int index = Integer.parseInt(fAddress.getIndex(), 2);
+		int tag = Integer.parseInt(fAddress.getTag(), 2);
 		if (l1Data.way1[index].getValidBit() == 0) {
 			l1Data.way1[index] = transferBlock;
+			l1Data.way1[index].lru = 0;
+			// return true;
 		} else if (l1Data.way2[index].getValidBit() == 0) {
 			l1Data.way2[index] = transferBlock;
+			l1Data.way2[index].lru = 1;
+			// return true;
 		} else if (l1Data.way3[index].getValidBit() == 0) {
 			l1Data.way3[index] = transferBlock;
+			l1Data.way3[index].lru = 2;
+			// return true;
 		} else if (l1Data.way4[index].getValidBit() == 0) {
 			l1Data.way4[index] = transferBlock;
+			l1Data.way4[index].lru = 3;
+			// return true;
+		} else {
+			if (l1Data.way1[index].getTag() == tag) {
+				handleExistingblock(index, l1Data.way1[index].getLru());
+				l1Data.way1[index].setLru(3);
+
+			} else if (l1Data.way2[index].getLru() == tag) {
+				handleExistingblock(index, l1Data.way2[index].getLru());
+				l1Data.way2[index].setLru(3);
+
+			} else if (l1Data.way3[index].getLru() == tag) {
+				handleExistingblock(index, l1Data.way3[index].getLru());
+				l1Data.way3[index].setLru(3);
+
+			} else if (l1Data.way4[index].getLru() == tag) {
+				handleExistingblock(index, l1Data.way4[index].getLru());
+				l1Data.way4[index].setLru(3);
+
+			} else {
+				reduceCount(index);
+				handleNewBlock(index, transferBlock);
+			}
 		}
 
+	}
+
+	private void reduceCount(int index) {
+		l1Data.way1[index].setLru(l1Data.way1[index].getLru() - 1);
+		l1Data.way2[index].setLru(l1Data.way2[index].getLru() - 1);
+		l1Data.way3[index].setLru(l1Data.way3[index].getLru() - 1);
+		l1Data.way4[index].setLru(l1Data.way4[index].getLru() - 1);
+	}
+
+	private void handleNewBlock(int index, Block transferBlock) {
+		Block vBlock = null;
+		if (l1Data.way1[index].getLru() == -1) {
+			l1Data.way1[index] = transferBlock;
+			l1Data.way1[index].setLru(3);
+		}
+		if (l1Data.way2[index].getLru() == -1) {
+			l1Data.way2[index] = transferBlock;
+			l1Data.way2[index].setLru(3);
+		}
+		if (l1Data.way3[index].getLru() == -1) {
+			l1Data.way3[index] = transferBlock;
+			l1Data.way3[index].setLru(3);
+		}
+		if (l1Data.way4[index].getLru() == -1) {
+			l1Data.way4[index] = transferBlock;
+			l1Data.way4[index].setLru(3);
+		}
+
+	}
+
+	private void handleExistingblock(int index, int lru) {
+
+		if (l1Data.way1[index].getLru() > lru) {
+			l1Data.way1[index].setLru(l1Data.way1[index].getLru() - 1);
+		}
+		if (l1Data.way2[index].getLru() > lru) {
+			l1Data.way2[index].setLru(l1Data.way2[index].getLru() - 1);
+		}
+		if (l1Data.way3[index].getLru() > lru) {
+			l1Data.way3[index].setLru(l1Data.way3[index].getLru() - 1);
+		}
+		if (l1Data.way4[index].getLru() > lru) {
+			l1Data.way4[index].setLru(l1Data.way4[index].getLru() - 1);
+		}
 	}
 
 	public void setDirty(int parseInt, int parseInt2, int i) {

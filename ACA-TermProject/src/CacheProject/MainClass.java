@@ -16,7 +16,7 @@ public class MainClass extends CommonImpl {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// System.setOut(new PrintStream(new FileOutputStream(curDir +
-		// "/src/CacheProject/testcaseOutput.txt")));
+		// "/src/CacheProject/.txt")));
 		// Initiate components
 		// System.out.println("Implementation starts from here");
 		Memory memory = new Memory();
@@ -53,9 +53,8 @@ public class MainClass extends CommonImpl {
 																		// Instruction
 					if (l1Controller.getState(instruction.getAddress().getAddress()) != null
 							&& !l1Controller.getState(instruction.getAddress().getAddress()).equals("Wralloc")) {
-						// l1Controller.setState(instruction.getAddress().getAddress(),
-						// "Wrwait");
-						System.out.println("Waiting for the read to complete");
+						l1Controller.setState(instruction.getAddress().getAddress(), "Wrwait");
+						System.out.println("Waiting for the write to complete");
 						l1Controller.queueProcessortoL1C.enqueue(instruction);
 					} else {
 						L1Hit = l1Controller.isL1Hit(instruction.getAddress());
@@ -63,18 +62,15 @@ public class MainClass extends CommonImpl {
 							if (l1Controller.victimCache.isVictimCacheHit(instruction.getAddress())) {
 								System.out.println("Hit in VC: " + instruction.getCommand());
 								l1Controller.victimCache.queueL1CtoVictimCache.enqueue(instruction);
-								// l1Controller.setState(instruction.getAddress().getAddress(),
-								// "RdwaitVCd");
+								l1Controller.setState(instruction.getAddress().getAddress(), "RdwaitVCd");
 							} else if (l1Controller.writeBuffer.isBuffercacheHit(instruction.getAddress())) {
 								System.out.println("Hit in WB: " + instruction.getCommand());
 								l1Controller.writeBuffer.queuetoWriteBuffer.enqueue(instruction);
-								// l1Controller.setState(instruction.getAddress().getAddress(),
-								// "RdwaitWBd");
+								l1Controller.setState(instruction.getAddress().getAddress(), "RdwaitWBd");
 							} else {
 								System.out.println("Hit in L1: " + instruction.getCommand());
 								l1Controller.l1Data.queueL1CtoL1D.enqueue(instruction);
-								// l1Controller.setState(instruction.getAddress().getAddress(),
-								// "Rdwaitd");
+								l1Controller.setState(instruction.getAddress().getAddress(), "Rdwaitd");
 							}
 						} else {
 							int index = Integer.parseInt(instruction.getAddress().getIndex(), 2);
@@ -83,15 +79,13 @@ public class MainClass extends CommonImpl {
 							if (l1Controller.isValid(index, tag) == 1) {
 								if (l1Controller.isDirty(index, tag) == 1) {
 									l2Controller.queueL1CtoL2C.enqueue(instruction);
-									// l1Controller.setState(instruction.getAddress().getAddress(),
-									// "Rd2waitd");
+									l1Controller.setState(instruction.getAddress().getAddress(), "Rd2waitd");
 									System.out.println("L1C to L2C: " + instruction.getCommand());
 									System.out.println("L1C main state: missd, state assign: Rd2waitd "
 											+ instruction.getCommand());
 								} else { // need not write back
 									l2Controller.queueL1CtoL2C.enqueue(instruction);
-									// l1Controller.setState(instruction.getAddress().getAddress(),
-									// "RdwaitL2d");
+									l1Controller.setState(instruction.getAddress().getAddress(), "RdwaitL2d");
 									System.out.println("L1C to L2C: " + instruction.getCommand());
 									System.out.println("L1C main state: missc, state assign: Rd2waitL2d "
 											+ instruction.getCommand());
@@ -100,8 +94,7 @@ public class MainClass extends CommonImpl {
 							} else {
 								// invalid, missi
 								l2Controller.queueL1CtoL2C.enqueue(instruction);
-								// l1Controller.setState(instruction.getAddress().getAddress(),
-								// "RdwaitL2d");
+								l1Controller.setState(instruction.getAddress().getAddress(), "RdwaitL2d");
 								System.out.println("L1C to L2C: " + instruction.getCommand());
 								System.out.println(
 										"L1C main state: missi, state assign: RdwaitL2d " + instruction.getCommand());
@@ -125,8 +118,7 @@ public class MainClass extends CommonImpl {
 							if (l1Controller.isDirty(index, tag) == 1) {
 								// write back
 								l2Controller.queueL1CtoL2C.enqueue(instruction);
-								// l1Controller.setState(instruction.getAddress().getAddress(),
-								// "Wr2waitd");
+								l1Controller.setState(instruction.getAddress().getAddress(), "Wr2waitd");
 								System.out.println("L1C to L2C: " + instruction.getCommand());
 								System.out.println(
 										"L1C main state: missd, state assign: Wr2waitd " + instruction.getCommand());
@@ -140,8 +132,7 @@ public class MainClass extends CommonImpl {
 								rIns.setProcessorInstructionKind(instruction.getProcessorInstructionKind());
 								rIns.setInstructionTransferType(0);
 								l2Controller.queueL1CtoL2C.enqueue(rIns);
-								// l1Controller.setState(instruction.getAddress().getAddress(),
-								// "WrwaitL2d");
+								l1Controller.setState(instruction.getAddress().getAddress(), "WrwaitL2d");
 								System.out.println("L1C to L2C: " + instruction.getCommand());
 								System.out.println(
 										"L1C main state: missc, state assign: Rd2waitL2d " + instruction.getCommand());
@@ -157,8 +148,7 @@ public class MainClass extends CommonImpl {
 							rIns.setProcessorInstructionKind(instruction.getProcessorInstructionKind());
 							rIns.setInstructionTransferType(0);
 							l2Controller.queueL1CtoL2C.enqueue(rIns);
-							// l1Controller.setState(instruction.getAddress().getAddress(),
-							// "WrwaitL2d");
+							l1Controller.setState(instruction.getAddress().getAddress(), "WrwaitL2d");
 							System.out.println("L1C to L2C: " + instruction.getCommand());
 							System.out.println(
 									"L1C main state: missi, state assign: WrwaitL2d " + instruction.getCommand());
@@ -188,13 +178,23 @@ public class MainClass extends CommonImpl {
 						Block block = instruction.getTransferBlock();
 						block.setBitData(Integer.parseInt(fAddress.getOffset(), 2),
 								((WriteInstruction) instruction).getWriteData());
-						l1Controller.l1write(block, fAddress);
 						l1Controller.l1writeChar(((WriteInstruction) instruction).getWriteData(), fAddress);
+						l1Controller.l1write(block, fAddress);
+						// if (!loaded) {
+						//
+						//
+						//// System.out.println("Block conflict-c : " +
+						// instruction.getCommand());
+						//// l1Controller.setState(instruction.getAddress().getAddress(),
+						// "Conflict");
+						// }
 						// System.out.println("L1D Data update: " +
 						// instruction.getCommand());
 						// System.out.println(block.data);
-
+						// else {
 						System.out.println("L1D block data updated from main memory: " + instruction.getCommand());
+						l1Controller.setState(instruction.getAddress().getAddress(), "Wralloc");
+						// }
 					}
 				} else {
 
@@ -282,8 +282,7 @@ public class MainClass extends CommonImpl {
 					rIns.setInstructionTransferType(0);
 					rIns.setSingleCharData(block.getData()[Integer.parseInt(fAddress.getOffset(), 2)]);
 					rIns.setTransferBlock(block);
-					// l1Controller.setState(instruction.getAddress().getAddress(),
-					// "RdwaitWBD");
+					l1Controller.setState(instruction.getAddress().getAddress(), "RdwaitWBD");
 					l1Controller.l1Data.queueL1DtoL1C.enqueue(rIns);
 					System.out.println(
 							"L1WB to L1C: Data sent after hitin WB, state: RdwaitWBD " + instruction.getCommand());
@@ -302,8 +301,7 @@ public class MainClass extends CommonImpl {
 				Address fAddress = formatAddress(address, l1Controller.l1_Tag, l1Controller.l1_Index,
 						l1Controller.l1_Offset);
 				if (l1Controller.getState(instruction.getAddress().getAddress()).equals("Rdwait2D")) {
-					// l1Controller.setState(instruction.getAddress().getAddress(),
-					// "Rdwait1d");
+					l1Controller.setState(instruction.getAddress().getAddress(), "Rdwait1d");
 				}
 				if (instruction.getProcessorInstructionKind() == 0) {
 					if (instruction.getInstructionTransferType() == 0) {
@@ -448,8 +446,7 @@ public class MainClass extends CommonImpl {
 								}
 							} else {
 								memory.queueL2CtoMemory.enqueue(instruction);
-								// l2Controller.setState(instruction.getAddress().getAddress(),
-								// "Wrwaitmemd");
+								l2Controller.setState(instruction.getAddress().getAddress(), "Wrwaitmemd");
 								System.out.println("L2C to Memory: " + instruction.getCommand());
 							}
 						}
@@ -529,11 +526,6 @@ public class MainClass extends CommonImpl {
 						System.out.println("L2D Data updated: " + instruction.getCommand());
 					}
 				} else {
-					// if
-					// (l2Controller.getState(instruction.getAddress().getAddress()).equals("Wrwaitmemd")
-					// ||
-					// l2Controller.getState(instruction.getAddress().getAddress()).equals("Wrwait1d"))
-					// {
 					Block block = instruction.getTransferBlock();
 					block.setBitData(Integer.parseInt(fAddress.getOffset(), 2),
 							((WriteInstruction) instruction).getWriteData());
@@ -542,7 +534,6 @@ public class MainClass extends CommonImpl {
 					System.out.println("L2D Data updated: " + instruction.getCommand());
 					System.out.println(block.data);
 				}
-				// }
 			}
 
 			if (!l2Controller.l2Data.queueL2DtoL2C.isEmpty()) {

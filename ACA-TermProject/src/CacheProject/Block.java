@@ -12,6 +12,8 @@ public class Block {
 	int offset;
 	int blockAddress;
 	char data[];
+	int lru;
+
 
 	ReadInstruction[] rIns;
 	WriteInstruction[] wIns;
@@ -135,5 +137,14 @@ public class Block {
 	public void setBlockAddress(int blockAddress) {
 		this.blockAddress = blockAddress;
 	}
+	
+	public int getLru() {
+		return lru;
+	}
+
+	public void setLru(int lru) {
+		this.lru = lru;
+	}
+
 
 }
