@@ -245,24 +245,24 @@ public class L1Controller extends CommonImpl {
 			// return true;
 		} else {
 			if (l1Data.way1[index].getTag() == tag) {
-				handleExistingblock(index, l1Data.way1[index].getLru());
+				handleExistingblock(index, l1Data.way1[index].getLru(), fAddress);
 				l1Data.way1[index].setLru(3);
 
 			} else if (l1Data.way2[index].getLru() == tag) {
-				handleExistingblock(index, l1Data.way2[index].getLru());
+				handleExistingblock(index, l1Data.way2[index].getLru(), fAddress);
 				l1Data.way2[index].setLru(3);
 
 			} else if (l1Data.way3[index].getLru() == tag) {
-				handleExistingblock(index, l1Data.way3[index].getLru());
+				handleExistingblock(index, l1Data.way3[index].getLru(), fAddress);
 				l1Data.way3[index].setLru(3);
 
 			} else if (l1Data.way4[index].getLru() == tag) {
-				handleExistingblock(index, l1Data.way4[index].getLru());
+				handleExistingblock(index, l1Data.way4[index].getLru(), fAddress);
 				l1Data.way4[index].setLru(3);
 
 			} else {
 				reduceCount(index);
-				handleNewBlock(index, transferBlock);
+				handleNewBlock(index, transferBlock, fAddress);
 			}
 		}
 
@@ -275,28 +275,33 @@ public class L1Controller extends CommonImpl {
 		l1Data.way4[index].setLru(l1Data.way4[index].getLru() - 1);
 	}
 
-	private void handleNewBlock(int index, Block transferBlock) {
+	private void handleNewBlock(int index, Block transferBlock, Address fAddress) {
 		Block vBlock = null;
 		if (l1Data.way1[index].getLru() == -1) {
+			vBlock = l1Data.way1[index];
 			l1Data.way1[index] = transferBlock;
 			l1Data.way1[index].setLru(3);
 		}
 		if (l1Data.way2[index].getLru() == -1) {
+			vBlock = l1Data.way2[index];
 			l1Data.way2[index] = transferBlock;
 			l1Data.way2[index].setLru(3);
 		}
 		if (l1Data.way3[index].getLru() == -1) {
+			vBlock = l1Data.way3[index];
 			l1Data.way3[index] = transferBlock;
 			l1Data.way3[index].setLru(3);
 		}
 		if (l1Data.way4[index].getLru() == -1) {
+			vBlock = l1Data.way4[index];
 			l1Data.way4[index] = transferBlock;
 			l1Data.way4[index].setLru(3);
 		}
+		victimCache.setVBlock(vBlock, fAddress);
 
 	}
 
-	private void handleExistingblock(int index, int lru) {
+	private void handleExistingblock(int index, int lru, Address fAddress) {
 
 		if (l1Data.way1[index].getLru() > lru) {
 			l1Data.way1[index].setLru(l1Data.way1[index].getLru() - 1);

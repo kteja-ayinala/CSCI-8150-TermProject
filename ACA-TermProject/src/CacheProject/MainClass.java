@@ -15,8 +15,8 @@ public class MainClass extends CommonImpl {
 	private static InstructionTransferer instruction;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		// System.setOut(new PrintStream(new FileOutputStream(curDir +
-		// "/src/CacheProject/.txt")));
+		 System.setOut(new PrintStream(new FileOutputStream(curDir +
+		 "/src/CacheProject/VictimCacheHitOutput.txt")));
 		// Initiate components
 		// System.out.println("Implementation starts from here");
 		Memory memory = new Memory();
@@ -180,6 +180,8 @@ public class MainClass extends CommonImpl {
 								((WriteInstruction) instruction).getWriteData());
 						l1Controller.l1writeChar(((WriteInstruction) instruction).getWriteData(), fAddress);
 						l1Controller.l1write(block, fAddress);
+						// l1Controller.setState(instruction.getAddress().getAddress(),
+						// "Wralloc");
 						// if (!loaded) {
 						//
 						//
@@ -203,6 +205,7 @@ public class MainClass extends CommonImpl {
 							((WriteInstruction) instruction).getWriteData());
 					l1Controller.l1write(block, fAddress);
 					l1Controller.l1writeChar(((WriteInstruction) instruction).getWriteData(), fAddress);
+					l1Controller.setState(instruction.getAddress().getAddress(), "Wrwaitd");
 					System.out.println("L1D write Data update: " + instruction.getCommand());
 					System.out.println(block.data);
 					l1Controller.setState(instruction.getAddress().getAddress(), "Wralloc");
@@ -317,26 +320,30 @@ public class MainClass extends CommonImpl {
 						System.out.println("L1C to L1D: " + instruction.getCommand());
 					}
 					// logic to return required read information
-					ReadInstruction rIns = new ReadInstruction();
-					rIns.setByteEnables(byteena);
-					rIns.setAddress(fAddress);
-					rIns.setCommand(instruction.getCommand());
-					rIns.setProcessorInstructionKind(instruction.getProcessorInstructionKind());
-					rIns.setInstructionTransferType(0);
-					if (byteena != 0) {
-						char[] data = new char[byteena];
-						Block block = instruction.getTransferBlock();
-						for (int i = 0; i < byteena; i++) {
-							data[i] = block.getData()[Integer.parseInt(fAddress.getOffset(), 2) + i];
+//					if (l1Controller.getState(instruction.getAddress().getAddress()).equals("Wralloc")) {
+						ReadInstruction rIns = new ReadInstruction();
+						rIns.setByteEnables(byteena);
+						rIns.setAddress(fAddress);
+						rIns.setCommand(instruction.getCommand());
+						rIns.setProcessorInstructionKind(instruction.getProcessorInstructionKind());
+						rIns.setInstructionTransferType(0);
+						if (byteena != 0) {
+							char[] data = new char[byteena];
+							Block block = instruction.getTransferBlock();
+							for (int i = 0; i < byteena; i++) {
+								data[i] = block.getData()[Integer.parseInt(fAddress.getOffset(), 2) + i];
+							}
+							rIns.setByteEnableData(data);
+						} else {
+							char returnData = instruction.getTransferBlock().getData()[Integer
+									.parseInt(fAddress.getOffset(), 2)];
+							rIns.setSingleCharData(returnData);
 						}
-						rIns.setByteEnableData(data);
-					} else {
-						char returnData = instruction.getTransferBlock().getData()[Integer
-								.parseInt(fAddress.getOffset(), 2)];
-						rIns.setSingleCharData(returnData);
-					}
-					processor.queueL1CtoProcessor.enqueue(rIns);
-					System.out.println("L1C to Processor: " + instruction.getCommand());
+						// l1Controller.setState(instruction.getAddress().getAddress(),
+						// "Rdwaitd");
+						processor.queueL1CtoProcessor.enqueue(rIns);
+						System.out.println("L1C to Processor: " + instruction.getCommand());
+//					}F
 				} else {// Write
 					if (l1Controller.isValid(Integer.parseInt(fAddress.getIndex(), 2),
 							Integer.parseInt(fAddress.getTag(), 2)) == 1) {
@@ -370,14 +377,29 @@ public class MainClass extends CommonImpl {
 				instruction = (InstructionTransferer) processor.queueL1CtoProcessor.dequeue();
 				if (instruction.getProcessorInstructionKind() == 0) {
 					if (instruction.getInstructionTransferType() == 0) {
+//						 if
+//						 (l1Controller.getState(instruction.getAddress().getAddress())
+//						 != null
+//						 &&
+//						 !l1Controller.getState(instruction.getAddress().getAddress()).equals("Wralloc"))
+//						 {
+//						 processor.queueL1CtoProcessor.enqueue(instruction);
+//						 }
+
 						char[] data = ((ReadInstruction) instruction).getByteEnableData();
 
 						String finaldata = String.valueOf(data);
 						System.out.println("!!****************************!!");
 						System.out.println("Result: " + finaldata + " for " + instruction.getCommand());
 						System.out.println("!!****************************!!");
+
 					}
 				}
+
+				// }
+				// else{
+				// processor.queueL1CtoProcessor.enqueue(instruction);
+				// }
 			}
 
 			if (!l2Controller.queueL1CtoL2C.isEmpty()) {
@@ -598,7 +620,7 @@ public class MainClass extends CommonImpl {
 					rIns.setInstructionTransferType(0);
 					rIns.setAddress(fAddress1);
 					l2Controller.queueMemorytoL2C.enqueue(rIns);
-					l2Controller.setState(instruction.getAddress().getAddress(), "RdwaitMemd");
+					l2Controller.setState(instruction.getAddress().getAddress(), "RdwaitMemdS");
 					System.out.println("Memory to L2C: state set to: RdwaitMemdtoL2 " + instruction.getCommand());
 				} else {// Write instruction
 					memBlock = instruction.getTransferBlock();
@@ -635,12 +657,12 @@ public class MainClass extends CommonImpl {
 							System.out.println("L2C to L2D: " + instruction.getCommand()); // Write
 																							// Instruction
 
-							l1Controller.setState(instruction.getAddress().getAddress(), "Wrwait1d"); // enqueued
+							l1Controller.setState(instruction.getAddress().getAddress(), "Wrwait2d"); // enqueued
 							l2Controller.clear(instruction.getAddress().getAddress());
 							l1Controller.queueL2CtoL1C.enqueue(instruction); // Read
 																				// Instruction
 																				// enqueued
-							System.out.println("L2C to L1C :  state set to: Wrwait1d" + instruction.getCommand());
+							System.out.println("L2C to L1C :  state set to: Wrwait2d" + instruction.getCommand());
 
 						}
 					}
