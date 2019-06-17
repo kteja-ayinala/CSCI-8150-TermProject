@@ -12,7 +12,7 @@ public class Processor extends CommonImpl {
 	public Queue queueProcessor = new Queue();
 	public Queue queueL1CtoProcessor = new Queue();
 
-	String testcaseFile = curDir + "/src/CacheProject/multiplerdwritedifflines.txt";
+	String testcaseFile = curDir + "/src/CacheProject/testcase.txt";
 
 	Processor() throws IOException {
 		// System.out.println(curDir);

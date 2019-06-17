@@ -1,6 +1,2 @@
-Read 65 2
-Write 2115 D
-Read 4163 2
-Write 6211 A
-Read 67 2
-Read 10304 5
+Write 130 A
+Read 130 3

@@ -1,0 +1,44 @@
+Instructions added to Memory
+Instructions added to L1 Instruction Cache
+Instructions added to L2
+Processor read
+---------cycle:1---------
+P to L1C: Write 130 B
+L1C to L2C: Write 130 B
+L1C main state: missi, state assign: WrwaitL2d Write 130 B
+L2C to Memory: state assign: Rdwaitmemd Write 130 B
+Reading data from memory 128
+---------cycle:2---------
+Reading data from memory 132
+---------cycle:3---------
+Reading data from memory 136
+---------cycle:4---------
+Reading data from memory 140
+---------cycle:5---------
+Reading data from memory 144
+---------cycle:6---------
+Reading data from memory 148
+---------cycle:7---------
+Reading data from memory 152
+---------cycle:8---------
+Reading data from memory 156
+Memory to L2C: state set to: RdwaitMemdtoL2 Write 130 B
+L2C to L2D: Write 130 B
+L2C to L1C :  state set to: Wrwait1dWrite 130 B
+---------cycle:9---------
+P to L1C: Read 130 2
+Waiting for the write to complete
+L1C to L1D:  state set to: Wrwait1dWrite 130 B
+L2D Data updated: Write 130 B
+ABBDEFGHIJKLMNOPQRSTUVWXYZABCDEF
+---------cycle:10---------
+Waiting for the write to complete
+L1D write Data update: Write 130 B
+ABBDEFGHIJKLMNOPQRSTUVWXYZABCDEF
+state set to : WrallocWrite 130 B
+---------cycle:11---------
+Hit in L1: Read 130 2
+L1C to Processor: Data sent after hit Read 130 2
+!!****************************!!
+Result: BD for Read 130 2
+!!****************************!!

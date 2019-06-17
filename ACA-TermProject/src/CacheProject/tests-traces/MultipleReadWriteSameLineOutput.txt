@@ -1,0 +1,161 @@
+Instructions added to Memory
+Instructions added to L1 Instruction Cache
+Instructions added to L2
+Processor read
+---------cycle:1---------
+P to L1C: Read 65 2
+L1C to L2C: Read 65 2
+L1C main state: missi, state assign: RdwaitL2d Read 65 2
+L2C to Memory: state assign: Rdwaitmemd Read 65 2
+Reading data from memory 64
+---------cycle:2---------
+Reading data from memory 68
+---------cycle:3---------
+Reading data from memory 72
+---------cycle:4---------
+Reading data from memory 76
+---------cycle:5---------
+Reading data from memory 80
+---------cycle:6---------
+Reading data from memory 84
+---------cycle:7---------
+Reading data from memory 88
+---------cycle:8---------
+Reading data from memory 92
+Memory to L2C: state set to: RdwaitMemdtoL2 Read 65 2
+L2C to L2D: Read 65 2
+L2C to L1C :  state set to: Wrwait2dRead 65 2
+---------cycle:9---------
+P to L1C: Write 2115 D
+L1C to L2C: Write 2115 D
+L1C main state: missi, state assign: WrwaitL2d Write 2115 D
+L1C to L1D: Read 65 2
+L1C to Processor: Read 65 2
+!!****************************!!
+Result: BC for Read 65 2
+!!****************************!!
+L2C to Memory: state assign: Rdwaitmemd Write 2115 D
+L2D Data updated: Read 65 2
+Reading data from memory 2112
+---------cycle:10---------
+Reading data from memory 2116
+---------cycle:11---------
+Reading data from memory 2120
+---------cycle:12---------
+Reading data from memory 2124
+---------cycle:13---------
+Reading data from memory 2128
+---------cycle:14---------
+Reading data from memory 2132
+---------cycle:15---------
+Reading data from memory 2136
+---------cycle:16---------
+Reading data from memory 2140
+Memory to L2C: state set to: RdwaitMemdtoL2 Write 2115 D
+L2C to L2D: Write 2115 D
+L2C to L1C :  state set to: Wrwait2dWrite 2115 D
+---------cycle:17---------
+P to L1C: Read 4163 2
+L1C to L2C: Read 4163 2
+L1C main state: missi, state assign: RdwaitL2d Read 4163 2
+L1D block data updated from main memory: Read 65 2
+L1C to L1D:  state set to: Wrwait1dWrite 2115 D
+L2C to Memory: state assign: Rdwaitmemd Read 4163 2
+L2D Data updated: Write 2115 D
+ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEF
+Reading data from memory 4160
+---------cycle:18---------
+Reading data from memory 4164
+---------cycle:19---------
+Reading data from memory 4168
+---------cycle:20---------
+Reading data from memory 4172
+---------cycle:21---------
+Reading data from memory 4176
+---------cycle:22---------
+Reading data from memory 4180
+---------cycle:23---------
+Reading data from memory 4184
+---------cycle:24---------
+Reading data from memory 4188
+Memory to L2C: state set to: RdwaitMemdtoL2 Read 4163 2
+L2C to L2D: Read 4163 2
+L2C to L1C :  state set to: Wrwait2dRead 4163 2
+---------cycle:25---------
+P to L1C: Write 6211 A
+L1C to L2C: Write 6211 A
+L1C main state: missi, state assign: WrwaitL2d Write 6211 A
+L1D write Data update: Write 2115 D
+ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEF
+state set to : WrallocWrite 2115 D
+L1C to L1D: Read 4163 2
+L1C to Processor: Read 4163 2
+!!****************************!!
+Result: DE for Read 4163 2
+!!****************************!!
+L2C to Memory: state assign: Rdwaitmemd Write 6211 A
+L2D Data updated: Read 4163 2
+Reading data from memory 6208
+---------cycle:26---------
+Reading data from memory 6212
+---------cycle:27---------
+Reading data from memory 6216
+---------cycle:28---------
+Reading data from memory 6220
+---------cycle:29---------
+Reading data from memory 6224
+---------cycle:30---------
+Reading data from memory 6228
+---------cycle:31---------
+Reading data from memory 6232
+---------cycle:32---------
+Reading data from memory 6236
+Memory to L2C: state set to: RdwaitMemdtoL2 Write 6211 A
+L2C to L2D: Write 6211 A
+L2C to L1C :  state set to: Wrwait2dWrite 6211 A
+---------cycle:33---------
+P to L1C: Read 67 2
+Hit in L1: Read 67 2
+L1D block data updated from main memory: Read 4163 2
+L1C to L1D:  state set to: Wrwait1dWrite 6211 A
+L2D Data updated: Write 6211 A
+ABCAEFGHIJKLMNOPQRSTUVWXYZABCDEF
+---------cycle:34---------
+P to L1C: Read 10304 5
+L1C to L2C: Read 10304 5
+L1C main state: missi, state assign: RdwaitL2d Read 10304 5
+L1C to Processor: Data sent after hit Read 67 2
+!!****************************!!
+Result: DE for Read 67 2
+!!****************************!!
+L2C to Memory: state assign: Rdwaitmemd Read 10304 5
+Reading data from memory 10304
+---------cycle:35---------
+Reading data from memory 10308
+---------cycle:36---------
+Reading data from memory 10312
+---------cycle:37---------
+Reading data from memory 10316
+---------cycle:38---------
+Reading data from memory 10320
+---------cycle:39---------
+Reading data from memory 10324
+---------cycle:40---------
+Reading data from memory 10328
+---------cycle:41---------
+Reading data from memory 10332
+Memory to L2C: state set to: RdwaitMemdtoL2 Read 10304 5
+L2C to L2D: Read 10304 5
+L2C to L1C :  state set to: Wrwait2dRead 10304 5
+---------cycle:42---------
+L1D write Data update: Write 6211 A
+ABCAEFGHIJKLMNOPQRSTUVWXYZABCDEF
+state set to : WrallocWrite 6211 A
+L1C to L1D: Read 10304 5
+L1C to Processor: Read 10304 5
+!!****************************!!
+Result: ABCDE for Read 10304 5
+!!****************************!!
+L2D Data updated: Read 10304 5
+---------cycle:43---------
+L1D block data updated from main memory: Read 10304 5

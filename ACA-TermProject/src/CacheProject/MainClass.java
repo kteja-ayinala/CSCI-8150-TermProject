@@ -15,8 +15,8 @@ public class MainClass extends CommonImpl {
 	private static InstructionTransferer instruction;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		 System.setOut(new PrintStream(new FileOutputStream(curDir +
-		 "/src/CacheProject/MultipleReadWriteDiffLineOutput.txt")));
+		// System.setOut(new PrintStream(new FileOutputStream(curDir +
+		// "/src/CacheProject/testcase.txt")));
 		// Initiate components
 		// System.out.println("Implementation starts from here");
 		Memory memory = new Memory();
